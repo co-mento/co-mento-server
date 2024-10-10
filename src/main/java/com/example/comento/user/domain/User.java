@@ -11,10 +11,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
-    @Column(unique = true, updatable = false)
+    @Column(unique = true)
     private String email;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false, updatable = false)
+    private String salt;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private UserProfile userProfile;
