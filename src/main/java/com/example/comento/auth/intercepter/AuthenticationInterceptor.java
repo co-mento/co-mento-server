@@ -34,6 +34,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                              final HttpServletResponse response,
                              final Object handler) throws Exception {
 
+        UriMatcher problemDetailUriMatcher = new UriMatcher(HttpMethod.GET, "/problems/{problem-id}");
+
+        if(problemDetailUriMatcher.match(request)) return true;
+
         String accessToken = AuthenticationExtractor.extract(request);
         UUID id = UUID.fromString(accessTokenProvider.getPayload(accessToken));
         User user = findUserByUserId(id);
