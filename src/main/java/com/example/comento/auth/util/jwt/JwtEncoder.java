@@ -17,7 +17,7 @@ public class JwtEncoder {
         return URLEncoder.encode(cookieValue, StandardCharsets.UTF_8).replaceAll("\\+", "%20");
     }
 
-    public static String decodeJwtBearerToken(String value){
-        return URLDecoder.decode(value, StandardCharsets.UTF_8).substring(7);
+    public static String decodeJwtBearerToken(String cookieValue){
+        return URLDecoder.decode(cookieValue, StandardCharsets.UTF_8).substring(7);
     }
 }
