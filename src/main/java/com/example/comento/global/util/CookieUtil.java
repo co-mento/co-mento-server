@@ -11,10 +11,10 @@ import java.time.Duration;
 public class CookieUtil {
     private CookieUtil(){}
     public static ResponseCookie createTokenCookie(
-            String tokenName, String tokenValue, Duration maxAge, String path){
+            String tokenName, String tokenValue, Duration maxAge){
         return ResponseCookie.from(tokenName, tokenValue)
                 .maxAge(maxAge)
-                .path(path)
+                .path("/")
                 .httpOnly(true)
                 .sameSite("None")
                 .secure(true)
