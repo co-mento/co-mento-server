@@ -19,6 +19,8 @@ public enum ErrorCode {
     //Unauthorized
     INVALID_TOKEN("4011", "유효하지 않은 토큰입니다."),
     TOKEN_NOT_FOUND("4012", "토큰이 존재하지 않습니다."),
+    USER_UNAUTHORIZED("4013", "로그인에 실패했습니다"),
+
 
     //Not_Found
     USER_NOT_FOUND("4040", "존재하지 않는 유저입니다"),
