@@ -15,17 +15,7 @@ import java.util.UUID;
 @Entity(name = "user_profile")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class UserProfile {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "uuid2")
-    @Column(name = "user_id", updatable = false, unique = true, nullable = false)
-    private UUID id;
-
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @MapsId //User의 Pk를 UserProfile의 PK이자 Fk로 사용
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+public class UserProfile extends BaseEntity{
 
     @Column(nullable = false)
     private String name;
@@ -33,14 +23,16 @@ public class UserProfile {
     @Column(nullable = false)
     private long experience;
 
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
-
-    public UserProfile (final User user, final String name){
+    //같은 패키지 내 user에서만 생성 가능.
+    protected UserProfile (final User user, final String name){
         this.user = user;
         this.name = name;
         this.experience = 0;
     }
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Solution> solution;
