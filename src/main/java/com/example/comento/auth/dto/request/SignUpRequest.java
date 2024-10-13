@@ -13,7 +13,7 @@ public class SignUpRequest {
 
     @NotBlank(message = "아이디를 입력해주세요.")
     @Pattern(regexp = APPLICATION_USERID_PATTERN, message = "아이디는 영문과 숫자를 포함해야 하며, 6자 이상, 15자 이하여야 합니다.")
-    private String id;
+    private String userId;
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
     @Pattern(regexp = APPLICATION_PASSWORD_PATTERN, message = "비밀번호는 영문, 숫자, 특수문자를 포함해야 하며, 8자 이상, 15자 이하여야 합니다.")
