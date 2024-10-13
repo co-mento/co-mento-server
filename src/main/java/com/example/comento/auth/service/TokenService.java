@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+
 import static com.example.comento.auth.constant.TokenConstant.ACCESS_TOKEN;
 import static com.example.comento.auth.constant.TokenConstant.ACCESS_TOKEN_MAX_AGE;
 
@@ -21,10 +23,19 @@ public class TokenService {
         return new TokenResponseCookies(accessTokenCookie);
     }
 
+    public TokenResponseCookies issueExpiredToken(){
+        ResponseCookie expiredTokenCookie = createExpiredAccessTokenCookies();
+        return new TokenResponseCookies(expiredTokenCookie);
+    }
+
     private ResponseCookie createAccessTokenCookie(String payload){
         String accessToken = accessTokenProvider.createToken(payload);
         String bearerToken = JwtEncoder.encodeJwtToken(accessToken);
         return  CookieUtil.createTokenCookie(ACCESS_TOKEN, bearerToken, ACCESS_TOKEN_MAX_AGE);
+    }
+
+    private ResponseCookie createExpiredAccessTokenCookies(){
+        return CookieUtil.createTokenCookie(ACCESS_TOKEN, null, Duration.ZERO);
     }
 
 }
