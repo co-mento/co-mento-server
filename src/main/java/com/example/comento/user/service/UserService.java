@@ -2,8 +2,8 @@ package com.example.comento.user.service;
 
 import com.example.comento.global.exception.NotFoundException;
 import com.example.comento.global.exception.errorcode.ErrorCode;
+import com.example.comento.user.dao.UserRankProfile;
 import com.example.comento.user.domain.User;
-import com.example.comento.user.domain.UserProfile;
 import com.example.comento.user.dto.response.UserRankingResponse;
 import com.example.comento.user.repository.UserJpaRepository;
 import com.example.comento.user.repository.UserProfileJpaRepository;
@@ -35,9 +35,8 @@ public class UserService {
 
     public UserRankingResponse getUserRanking(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        Page<UserProfile> userProfilePage = profileJpaRepository.getUserRanking(pageable);
+        Page<UserRankProfile> userProfilePage = profileJpaRepository.getUserRanking(pageable);
         UserRankingResponse userRankingResponse = UserRankingResponse.from(userProfilePage);
-
 
         return userRankingResponse;
     }

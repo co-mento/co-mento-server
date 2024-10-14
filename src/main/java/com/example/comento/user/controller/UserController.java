@@ -1,12 +1,10 @@
 package com.example.comento.user.controller;
 
 import com.example.comento.global.dto.ResponseDto;
-import com.example.comento.user.dto.response.UserProfileResponse;
 import com.example.comento.user.dto.response.UserRankingResponse;
 import com.example.comento.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
