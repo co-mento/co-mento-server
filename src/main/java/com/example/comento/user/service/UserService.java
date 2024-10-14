@@ -1,5 +1,6 @@
 package com.example.comento.user.service;
 
+import com.example.comento.global.exception.BadRequestException;
 import com.example.comento.global.exception.NotFoundException;
 import com.example.comento.global.exception.errorcode.ErrorCode;
 import com.example.comento.user.dao.UserRankProfile;
@@ -36,9 +37,15 @@ public class UserService {
     public UserRankingResponse getUserRanking(int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         Page<UserRankProfile> userProfilePage = profileJpaRepository.getUserRanking(pageable);
+        checkValidPage(userProfilePage, page);
         UserRankingResponse userRankingResponse = UserRankingResponse.from(userProfilePage);
 
         return userRankingResponse;
     }
 
+    private <T> void checkValidPage(Page<T> pages, int page){
+        if(page != 0 && page >= pages.getTotalPages() || page < 0){
+            throw new BadRequestException(ErrorCode.USER_NOT_FOUND);
+        }
+    }
 }
