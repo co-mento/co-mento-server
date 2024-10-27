@@ -1,6 +1,6 @@
 package com.example.comento.like.domain;
 
-import com.example.comento.global.domain.BaseEntity;
+import com.example.comento.global.domain.UuidTypeBaseEntity;
 import com.example.comento.problem.damain.Problem;
 import com.example.comento.user.domain.UserProfile;
 import jakarta.persistence.Entity;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity(name = "problem_like")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProblemLike extends BaseEntity {
+public class ProblemLike extends UuidTypeBaseEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_profile_id", nullable = false)

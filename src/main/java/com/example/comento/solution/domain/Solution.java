@@ -1,6 +1,6 @@
 package com.example.comento.solution.domain;
 
-import com.example.comento.global.domain.BaseEntity;
+import com.example.comento.global.domain.UuidTypeBaseEntity;
 import com.example.comento.problem.damain.Problem;
 import com.example.comento.user.domain.UserProfile;
 import jakarta.persistence.*;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity(name = "solution")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Solution extends BaseEntity {
+public class Solution extends UuidTypeBaseEntity {
 
     @Column(nullable = false)
     private String language;
@@ -24,7 +24,7 @@ public class Solution extends BaseEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_profile_id", nullable = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_profile_id", nullable = false)
     private UserProfile userProfile;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)

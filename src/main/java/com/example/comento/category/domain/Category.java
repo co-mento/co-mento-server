@@ -1,6 +1,6 @@
 package com.example.comento.category.domain;
 
-import com.example.comento.global.domain.BaseEntity;
+import com.example.comento.global.domain.UuidTypeBaseEntity;
 import com.example.comento.problem.damain.ProblemCategory;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -12,7 +12,7 @@ import java.util.List;
 @Entity(name = "category")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Category extends BaseEntity {
+public class Category extends UuidTypeBaseEntity {
 
     @Column(nullable = false, unique = true)
     private String name;

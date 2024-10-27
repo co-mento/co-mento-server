@@ -1,7 +1,7 @@
 package com.example.comento.problem.damain;
 
 import com.example.comento.collection.domain.Collection;
-import com.example.comento.global.domain.BaseEntity;
+import com.example.comento.global.domain.UuidTypeBaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity(name = "problem_collection")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProblemCollection extends BaseEntity {
+public class ProblemCollection extends UuidTypeBaseEntity {
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "problem_id", nullable = false)

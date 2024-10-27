@@ -1,6 +1,6 @@
 package com.example.comento.problem.damain;
 
-import com.example.comento.global.domain.BaseEntity;
+import com.example.comento.global.domain.LongTypeBaseEntity;
 import com.example.comento.like.domain.ProblemLike;
 import com.example.comento.solution.domain.Solution;
 import jakarta.persistence.*;
@@ -13,7 +13,7 @@ import java.util.List;
 @Entity(name = "problem")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Problem extends BaseEntity {
+public class Problem extends LongTypeBaseEntity {
 
     @Column(nullable = false)
     private String title;

@@ -1,6 +1,6 @@
 package com.example.comento.collection.domain;
 
-import com.example.comento.global.domain.BaseEntity;
+import com.example.comento.global.domain.UuidTypeBaseEntity;
 import com.example.comento.problem.damain.ProblemCollection;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -13,7 +13,7 @@ import java.util.List;
 @Entity(name = "collection")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Collection extends BaseEntity {
+public class Collection extends UuidTypeBaseEntity {
 
     @Column(nullable = false, unique = true)
     private String name;
