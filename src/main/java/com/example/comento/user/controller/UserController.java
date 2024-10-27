@@ -34,7 +34,7 @@ public class UserController {
     public ResponseEntity<ResponseDto<DetailUserProfileResponse>> getDetailProfile(
             @PathVariable("userprofile-id")UUID userProfileId){
         DetailUserProfileResponse detailProfile = userProfileService.getDetailProfile(userProfileId);
-        return new ResponseEntity<>(ResponseDto.res(true, "유저 랭킹 조회 성공", detailProfile), HttpStatus.OK);
+        return new ResponseEntity<>(ResponseDto.res(true, "유저 프로필 상세 조회 성공", detailProfile), HttpStatus.OK);
     }
 
 }
