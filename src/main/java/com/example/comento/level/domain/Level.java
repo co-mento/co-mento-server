@@ -1,6 +1,6 @@
 package com.example.comento.level.domain;
 
-import com.example.comento.global.domain.BaseEntity;
+import com.example.comento.global.domain.UuidTypeBaseEntity;
 import com.example.comento.problem.damain.ProblemLevel;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -12,7 +12,7 @@ import java.util.List;
 @Entity(name = "level")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Level extends BaseEntity {
+public class Level extends UuidTypeBaseEntity {
 
     @Column(nullable = false)
     private long experience;

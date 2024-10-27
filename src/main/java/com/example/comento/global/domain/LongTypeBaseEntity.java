@@ -13,12 +13,13 @@ import java.util.UUID;
 @MappedSuperclass
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity {
+public class LongTypeBaseEntity {
+
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "uuid2")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, unique = true, nullable = false)
-    private UUID id;
+    private Long id;
 
     @CreatedDate
     private LocalDateTime createdAt;
@@ -34,7 +35,7 @@ public abstract class BaseEntity {
         if(o==null || this.getClass() != o.getClass()){
             return false;
         }
-        return this.id.equals(((BaseEntity) o).id);
+        return this.id.equals(((LongTypeBaseEntity) o).id);
     }
 
     @Override

@@ -1,21 +1,17 @@
 package com.example.comento.user.domain;
 
-import com.example.comento.global.domain.BaseEntity;
+import com.example.comento.global.domain.UuidTypeBaseEntity;
 import com.example.comento.like.domain.ProblemLike;
 import com.example.comento.solution.domain.Solution;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Entity(name = "user_profile")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class UserProfile extends BaseEntity{
+public class UserProfile extends UuidTypeBaseEntity {
 
     @Column(nullable = false)
     private String name;

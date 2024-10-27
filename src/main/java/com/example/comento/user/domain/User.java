@@ -1,6 +1,6 @@
 package com.example.comento.user.domain;
 
-import com.example.comento.global.domain.BaseEntity;
+import com.example.comento.global.domain.UuidTypeBaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Entity(name = "user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity {
+public class User extends UuidTypeBaseEntity {
 
     @Column(nullable = false, unique = true)
     private String userId;
