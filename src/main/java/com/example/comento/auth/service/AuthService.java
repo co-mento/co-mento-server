@@ -32,7 +32,7 @@ public class AuthService {
     public void signUp(SignUpRequest request){
         String salt = issueSalt();
         String hashedPassword = passwordHashEncryption.encrypt(request.getPassword(), salt);
-        User user = new User(request.getUserId(), hashedPassword, salt, request.getEmail(), request.getName());
+        User user = new User(request.getUserId(), hashedPassword, salt, request.getName());
         userJpaRepository.save(user);
     }
 
