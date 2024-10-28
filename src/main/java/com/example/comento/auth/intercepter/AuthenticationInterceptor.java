@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.UUID;
@@ -34,9 +35,15 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                              final HttpServletResponse response,
                              final Object handler) throws Exception {
 
+        if(CorsUtils.isPreFlightRequest(request)){
+            return true;
+        }
+
         UriMatcher problemDetailUriMatcher = new UriMatcher(HttpMethod.GET, "/problems/{problem-id}");
+        UriMatcher userProfileDetailUriMatcher = new UriMatcher(HttpMethod.GET, "/users/{user-profile-id}");
 
         if(problemDetailUriMatcher.match(request)) return true;
+        if(userProfileDetailUriMatcher.match(request)) return true;
 
         String accessToken = AuthenticationExtractor.extract(request);
         UUID id = UUID.fromString(accessTokenProvider.getPayload(accessToken));
