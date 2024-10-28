@@ -36,10 +36,10 @@ public class AuthService {
         userJpaRepository.save(user);
     }
 
-    public UUID login(LoginRequest request){
+    public User login(LoginRequest request){
         User user = userService.findByUserId(request.getUserId());
         if(passwordHashEncryption.matches(request.getPassword(), user.getSalt(), user.getPassword())){
-            return user.getId();
+            return user;
         }
         throw new UnauthorizedException(ErrorCode.USER_UNAUTHORIZED);
     }

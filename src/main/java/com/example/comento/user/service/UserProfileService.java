@@ -8,6 +8,7 @@ import com.example.comento.solution.service.SolutionService;
 import com.example.comento.user.domain.User;
 import com.example.comento.user.domain.UserProfile;
 import com.example.comento.user.dto.response.DetailUserProfileResponse;
+import com.example.comento.user.dto.response.UserProfileResponse;
 import com.example.comento.user.repository.UserProfileJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,11 @@ public class UserProfileService {
         ProblemIdsResponse solvedProblemIds = solutionService.userSolvedList(userProfile);
         ProblemIdsResponse failedProblemIds = solutionService.userFailedList(userProfile);
         return DetailUserProfileResponse.from(userProfile, solvedProblemIds, failedProblemIds);
+    }
+
+    public UserProfileResponse getProfileResponse(User user){
+        UserProfile userProfile = findByUser(user);
+        return UserProfileResponse.from(userProfile);
     }
 
     public UserProfile findByUser(User user){
