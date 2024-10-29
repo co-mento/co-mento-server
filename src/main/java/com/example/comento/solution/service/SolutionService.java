@@ -18,12 +18,16 @@ public class SolutionService {
 
     public ProblemIdsResponse userSolvedList(UserProfile userProfile){
         List<ProblemId> problemIdList = problemJpaRepository.getSolvedProblemList(userProfile);
-        problemIdList.forEach(i->log.info(i.getId().toString()));
         return ProblemIdsResponse.from(problemIdList);
     }
 
     public ProblemIdsResponse userFailedList(UserProfile userProfile){
         List<ProblemId> problemIdList = problemJpaRepository.getFailedProblemList(userProfile);
+        return ProblemIdsResponse.from(problemIdList);
+    }
+
+    public ProblemIdsResponse userLikedList(UserProfile userprofile){
+        List<ProblemId> problemIdList = problemJpaRepository.getLikedProblemList(userprofile);
         return ProblemIdsResponse.from(problemIdList);
     }
 }

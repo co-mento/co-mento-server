@@ -38,4 +38,14 @@ public interface ProblemJpaRepository extends JpaRepository<Problem, Long> {
             "group by p.id " +
             "order by p.id desc")
     List<ProblemId> getFailedProblemList(UserProfile profile);
+
+    @Query ("select p.id as id " +
+            "from problem as p " +
+            "where EXISTS (" +
+            "   select 1 " +
+            "   from problem_like as pl " +
+            "   where pl.problem = p and pl.userProfile = :profile " +
+            ")" +
+            "order by p.id desc")
+    List<ProblemId> getLikedProblemList(UserProfile profile);
 }
