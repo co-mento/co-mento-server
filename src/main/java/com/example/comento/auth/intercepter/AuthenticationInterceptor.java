@@ -8,7 +8,9 @@ import com.example.comento.global.exception.NotFoundException;
 import com.example.comento.global.exception.errorcode.ErrorCode;
 import com.example.comento.global.util.UriMatcher;
 import com.example.comento.user.domain.User;
+import com.example.comento.user.domain.UserProfile;
 import com.example.comento.user.repository.UserJpaRepository;
+import com.example.comento.user.repository.UserProfileJpaRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private final AuthenticationContext authenticationContext;
     private final UserJpaRepository userJpaRepository;
     private final AccessTokenProvider accessTokenProvider;
-
+    private final UserProfileJpaRepository userProfileJpaRepository;
 
     @Override
     public boolean preHandle(final HttpServletRequest request,
@@ -48,11 +50,16 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         String accessToken = AuthenticationExtractor.extract(request);
         UUID id = UUID.fromString(accessTokenProvider.getPayload(accessToken));
         User user = findUserByUserId(id);
-        authenticationContext.setPrincipal(user);
+        UserProfile profile = findUserProfileByUser(user);
+        authenticationContext.setPrincipal(user,profile);
         return true;
     }
 
     private User findUserByUserId(UUID id){
         return userJpaRepository.findById(id).orElseThrow(()-> new NotFoundException(ErrorCode.USER_NOT_FOUND));
+    }
+
+    private UserProfile findUserProfileByUser(User user){
+        return userProfileJpaRepository.findByUser(user).orElseThrow(()-> new NotFoundException(ErrorCode.USER_NOT_FOUND));
     }
 }

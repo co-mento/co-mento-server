@@ -1,6 +1,6 @@
 package com.example.comento.auth.annotation.resolver;
 
-import com.example.comento.auth.annotation.AuthenticationUser;
+import com.example.comento.auth.annotation.AuthenticationPrincipal;
 import com.example.comento.auth.util.authentication.AuthenticationContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -17,7 +17,7 @@ public class AuthenticatedUserArgumentResolver implements HandlerMethodArgumentR
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(AuthenticationUser.class);
+        return parameter.hasParameterAnnotation(AuthenticationPrincipal.class);
     }
 
     @Override
