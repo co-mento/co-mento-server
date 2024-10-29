@@ -25,9 +25,12 @@ public class UserProfileService {
 
     public DetailUserProfileResponse getDetailProfile(UUID userProfileId){
         UserProfile userProfile = findById(userProfileId);
+
         ProblemIdsResponse solvedProblemIds = solutionService.userSolvedList(userProfile);
         ProblemIdsResponse failedProblemIds = solutionService.userFailedList(userProfile);
-        return DetailUserProfileResponse.from(userProfile, solvedProblemIds, failedProblemIds);
+        ProblemIdsResponse likedProblemIds = solutionService.userLikedList(userProfile);
+
+        return DetailUserProfileResponse.from(userProfile, solvedProblemIds, failedProblemIds, likedProblemIds);
     }
 
     public UserProfileResponse getProfileResponse(User user){

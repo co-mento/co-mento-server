@@ -14,16 +14,19 @@ public class DetailUserProfileResponse {
     private final Long experience;
     private final List<Long> solvedProblemIds;
     private final List<Long> failedProblemIds;
+    private final List<Long> likedProblemIds;
 
     public static DetailUserProfileResponse from(
             UserProfile profile,
             ProblemIdsResponse solvedProblemIds,
-            ProblemIdsResponse failedProblemIds){
+            ProblemIdsResponse failedProblemIds,
+            ProblemIdsResponse likedProblemIds){
 
         return new DetailUserProfileResponse(
                 profile.getName(),
                 profile.getExperience(),
                 solvedProblemIds.getProblemIds(),
-                failedProblemIds.getProblemIds());
+                failedProblemIds.getProblemIds(),
+                likedProblemIds.getProblemIds());
     }
 }

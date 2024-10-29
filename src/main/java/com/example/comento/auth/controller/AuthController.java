@@ -1,8 +1,9 @@
 package com.example.comento.auth.controller;
 
-import com.example.comento.auth.annotation.AuthenticationUser;
+import com.example.comento.auth.annotation.AuthenticationPrincipal;
 import com.example.comento.auth.dto.request.LoginRequest;
 import com.example.comento.auth.dto.request.SignUpRequest;
+import com.example.comento.auth.dto.response.Principal;
 import com.example.comento.auth.dto.response.TokenResponseCookies;
 import com.example.comento.auth.service.AuthService;
 import com.example.comento.auth.service.TokenService;
@@ -11,7 +12,6 @@ import com.example.comento.user.domain.User;
 import com.example.comento.user.dto.response.UserProfileResponse;
 import com.example.comento.user.service.UserProfileService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class AuthController {
 
     @PostMapping("/logout")
     @Operation(summary = "로그아웃 api", description = "토큰이 만료되도록 하여 로그아웃 됨")
-    public ResponseEntity<ResponseDto<Void>> logout(@AuthenticationUser User user, HttpServletResponse response){
+    public ResponseEntity<ResponseDto<Void>> logout(@AuthenticationPrincipal Principal principal, HttpServletResponse response){
         TokenResponseCookies cookies = tokenService.issueExpiredToken();
         response.addHeader("set-cookies", cookies.getAccessToken().toString());
         return new ResponseEntity<>(ResponseDto.res(true, "로그아웃 성공"), HttpStatus.OK);

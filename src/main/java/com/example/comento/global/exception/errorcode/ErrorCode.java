@@ -25,6 +25,10 @@ public enum ErrorCode {
     //Not_Found
     USER_NOT_FOUND("4040", "존재하지 않는 유저입니다."),
     PAGE_NOT_FOUND("4041", "존재하지 않는 페이지입니다."),
+    PROBLEM_NOT_FOUNT("4042", "존재하지 않는 문제입니다."),
+
+    //Conflict
+    LIKE_CONFLICT("4090", "불가한 좋아요 요청입니다.")
 
 
     ;
