@@ -24,4 +24,12 @@ public class ProblemController {
         problemLikeService.likeProblem(principal.getProfile(), problemId);
         return new ResponseEntity<>(ResponseDto.res(true, "좋아요 추가 성공"), HttpStatus.OK);
     }
+
+    @DeleteMapping("/{problem-id}/like")
+    @Operation(summary = "좋아요 삭제 api")
+    public ResponseEntity<ResponseDto<Void>> unLikeProblem(@AuthenticationPrincipal Principal principal,
+                                                         @PathVariable("problem-id") Long problemId){
+        problemLikeService.unLikeProblem(principal.getProfile(), problemId);
+        return new ResponseEntity<>(ResponseDto.res(true, "좋아요 삭제 성공"), HttpStatus.OK);
+    }
 }
