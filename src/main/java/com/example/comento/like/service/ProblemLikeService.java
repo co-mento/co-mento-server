@@ -1,6 +1,7 @@
 package com.example.comento.like.service;
 
 import com.example.comento.global.exception.ConflictException;
+import com.example.comento.global.exception.NotFoundException;
 import com.example.comento.global.exception.errorcode.ErrorCode;
 import com.example.comento.like.domain.ProblemLike;
 import com.example.comento.like.repository.ProblemLikeJpaRepository;
@@ -27,6 +28,13 @@ public class ProblemLikeService {
         }catch (DataIntegrityViolationException e){
             throw new ConflictException(ErrorCode.LIKE_CONFLICT, "이미 좋아요를 누른 문제입니다.");
         }
+    }
+
+    public void unLikeProblem(UserProfile userProfile, Long problemId) {
+        Problem problem = problemService.findById(problemId);
+        ProblemLike problemLike = problemLikeJpaRepository.findByUserProfileAndProblem(userProfile, problem)
+                .orElseThrow(()->new ConflictException(ErrorCode.LIKE_CONFLICT));
+        problemLikeJpaRepository.delete(problemLike);
     }
 
 }
