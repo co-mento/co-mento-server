@@ -3,7 +3,6 @@ package com.example.comento.solution.service;
 import com.example.comento.problem.repository.ProblemJpaRepository;
 import com.example.comento.solution.dao.ProblemId;
 import com.example.comento.solution.dao.SolutionDao;
-import com.example.comento.solution.domain.Solution;
 import com.example.comento.solution.dto.response.ProblemIdsResponse;
 import com.example.comento.solution.dto.response.SolutionListResponse;
 import com.example.comento.solution.repository.SolutionJpaRepository;
@@ -16,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -39,10 +39,14 @@ public class SolutionService {
         return ProblemIdsResponse.from(problemIdList);
     }
 
-    public SolutionListResponse findAllAboutProblem(Long problemId, int page, int size){
-
+    public SolutionListResponse findAllAboutProblem(Long problemId, int page, int size, UUID userProfileId){
         Pageable pageable = PageRequest.of(page, size);
-        Page<SolutionDao> solutionDaos =  solutionJpaRepository.findAllByProblem(problemId, pageable);
+
+        if(userProfileId == null){
+            Page<SolutionDao> solutionDaos =  solutionJpaRepository.findAllByProblemId(problemId, pageable);
+            return SolutionListResponse.from(solutionDaos);
+        }
+        Page<SolutionDao> solutionDaos =  solutionJpaRepository.findAllByProblemIdAndUserProfileId(problemId, pageable, userProfileId);
 
         return SolutionListResponse.from(solutionDaos);
     }

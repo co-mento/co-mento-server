@@ -1,6 +1,5 @@
 package com.example.comento.solution.repository;
 
-import com.example.comento.problem.damain.Problem;
 import com.example.comento.solution.dao.SolutionDao;
 import com.example.comento.solution.domain.Solution;
 import org.springframework.data.domain.Page;
@@ -20,5 +19,13 @@ public interface SolutionJpaRepository extends JpaRepository<Solution, UUID> {
             "from solution s " +
             "where s.problem.id = :problemId " +
             "order by s.createdAt desc, s.id ")
-    Page<SolutionDao> findAllByProblem(Long problemId, Pageable pageable);
+    Page<SolutionDao> findAllByProblemId(Long problemId, Pageable pageable);
+
+    @Query("select s.id as id, s.userProfile.name as userName, s.memory as memory, " +
+            "s.time as time, s.language as language, s.isCorrect as isCorrect," +
+            "s.problem.id as problemId, s.problem.title as problemTitle, s.createdAt as createdAt " +
+            "from solution s " +
+            "where s.problem.id = :problemId and s.userProfile.id = :userProfileId " +
+            "order by s.createdAt desc, s.id ")
+    Page<SolutionDao> findAllByProblemIdAndUserProfileId(Long problemId, Pageable pageable, UUID userProfileId);
 }
