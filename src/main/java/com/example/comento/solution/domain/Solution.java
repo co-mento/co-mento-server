@@ -22,6 +22,12 @@ public class Solution extends UuidTypeBaseEntity {
     @Column(nullable = false)
     private boolean isCorrect;
 
+    @Column(nullable = false)
+    private int memory;
+
+    @Column(nullable = false)
+    private int time;
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_profile_id", nullable = false)
     @JoinColumn(name = "user_profile_id", nullable = false)
