@@ -24,30 +24,38 @@ public class SolutionService {
     private final ProblemJpaRepository problemJpaRepository;
     private final SolutionJpaRepository solutionJpaRepository;
 
-    public ProblemIdsResponse userSolvedList(UserProfile userProfile){
+    public ProblemIdsResponse userSolvedList(UserProfile userProfile) {
         List<ProblemId> problemIdList = problemJpaRepository.getSolvedProblemList(userProfile);
         return ProblemIdsResponse.from(problemIdList);
     }
 
-    public ProblemIdsResponse userFailedList(UserProfile userProfile){
+    public ProblemIdsResponse userFailedList(UserProfile userProfile) {
         List<ProblemId> problemIdList = problemJpaRepository.getFailedProblemList(userProfile);
         return ProblemIdsResponse.from(problemIdList);
     }
 
-    public ProblemIdsResponse userLikedList(UserProfile userprofile){
+    public ProblemIdsResponse userLikedList(UserProfile userprofile) {
         List<ProblemId> problemIdList = problemJpaRepository.getLikedProblemList(userprofile);
         return ProblemIdsResponse.from(problemIdList);
     }
 
-    public SolutionListResponse findAllAboutProblem(Long problemId, int page, int size, UUID userProfileId){
+    public SolutionListResponse findAllAboutProblem(Long problemId, int page, int size, UUID userProfileId) {
         Pageable pageable = PageRequest.of(page, size);
 
-        if(userProfileId == null){
-            Page<SolutionDao> solutionDaos =  solutionJpaRepository.findAllByProblemId(problemId, pageable);
+        if (userProfileId == null && problemId == null) {
+            Page<SolutionDao> solutionDaos = solutionJpaRepository.findAllSolution(pageable);
             return SolutionListResponse.from(solutionDaos);
         }
-        Page<SolutionDao> solutionDaos =  solutionJpaRepository.findAllByProblemIdAndUserProfileId(problemId, pageable, userProfileId);
+        if (userProfileId == null) {
+            Page<SolutionDao> solutionDaos = solutionJpaRepository.findAllByProblemId(problemId, pageable);
+            return SolutionListResponse.from(solutionDaos);
+        }
+        if (problemId == null) {
+            Page<SolutionDao> solutionDaos = solutionJpaRepository.findAllByProfileId(userProfileId, pageable);
+            return SolutionListResponse.from(solutionDaos);
+        }
 
+        Page<SolutionDao> solutionDaos = solutionJpaRepository.findAllByProblemIdAndUserProfileId(problemId, userProfileId, pageable);
         return SolutionListResponse.from(solutionDaos);
     }
 }

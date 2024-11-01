@@ -27,5 +27,21 @@ public interface SolutionJpaRepository extends JpaRepository<Solution, UUID> {
             "from solution s " +
             "where s.problem.id = :problemId and s.userProfile.id = :userProfileId " +
             "order by s.createdAt desc, s.id ")
-    Page<SolutionDao> findAllByProblemIdAndUserProfileId(Long problemId, Pageable pageable, UUID userProfileId);
+    Page<SolutionDao> findAllByProblemIdAndUserProfileId(Long problemId, UUID userProfileId, Pageable pageable);
+
+    @Query("select s.id as id, s.userProfile.name as userName, s.memory as memory, " +
+            "s.time as time, s.language as language, s.isCorrect as isCorrect," +
+            "s.problem.id as problemId, s.problem.title as problemTitle, s.createdAt as createdAt " +
+            "from solution s " +
+            "where s.userProfile.id = :userProfileId " +
+            "order by s.createdAt desc, s.id ")
+    Page<SolutionDao> findAllByProfileId(UUID userProfileId, Pageable pageable);
+
+
+    @Query("select s.id as id, s.userProfile.name as userName, s.memory as memory, " +
+            "s.time as time, s.language as language, s.isCorrect as isCorrect," +
+            "s.problem.id as problemId, s.problem.title as problemTitle, s.createdAt as createdAt " +
+            "from solution s " +
+            "order by s.createdAt desc, s.id ")
+    Page<SolutionDao> findAllSolution(Pageable pageable);
 }
