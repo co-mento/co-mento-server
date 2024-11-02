@@ -1,9 +1,13 @@
 package com.example.comento.solution.service;
 
+import com.example.comento.global.exception.NotFoundException;
+import com.example.comento.global.exception.errorcode.ErrorCode;
 import com.example.comento.problem.repository.ProblemJpaRepository;
 import com.example.comento.solution.dao.ProblemId;
 import com.example.comento.solution.dao.SolutionDao;
+import com.example.comento.solution.domain.Solution;
 import com.example.comento.solution.dto.response.ProblemIdsResponse;
+import com.example.comento.solution.dto.response.SolutionDetailResponse;
 import com.example.comento.solution.dto.response.SolutionListResponse;
 import com.example.comento.solution.repository.SolutionJpaRepository;
 import com.example.comento.user.domain.UserProfile;
@@ -57,5 +61,14 @@ public class SolutionService {
 
         Page<SolutionDao> solutionDaos = solutionJpaRepository.findAllByProblemIdAndUserProfileId(problemId, userProfileId, pageable);
         return SolutionListResponse.from(solutionDaos);
+    }
+
+    public SolutionDetailResponse findSolution(UUID solutionId) {
+        Solution solution = findById(solutionId);
+        return SolutionDetailResponse.from(solution);
+    }
+
+    public Solution findById(UUID solutionId){
+        return solutionJpaRepository.findById(solutionId).orElseThrow(()-> new NotFoundException(ErrorCode.SOLUTION_NOT_FOUND));
     }
 }
