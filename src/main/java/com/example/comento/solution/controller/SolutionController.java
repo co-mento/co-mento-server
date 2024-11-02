@@ -1,6 +1,7 @@
 package com.example.comento.solution.controller;
 
 import com.example.comento.global.dto.ResponseDto;
+import com.example.comento.solution.dto.response.SolutionDetailResponse;
 import com.example.comento.solution.dto.response.SolutionListResponse;
 import com.example.comento.solution.service.SolutionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,4 +39,12 @@ public class SolutionController {
         SolutionListResponse solutionListResponse = solutionService.findAllAboutProblem(problemId, page, size, userProfileId);
         return new ResponseEntity<>(ResponseDto.res(true, "풀이 목록 조회 성공", solutionListResponse), HttpStatus.OK);
     }
+
+    @GetMapping("/{solution-id}")
+    @Operation(summary = "풀이 상세 조회 api")
+    public ResponseEntity<ResponseDto<SolutionDetailResponse>> findDetailSolution(@PathVariable(name = "solution-id") UUID solutionId) {
+        SolutionDetailResponse solutionDetailResponse = solutionService.findSolution(solutionId);
+        return new ResponseEntity<>(ResponseDto.res(true, "풀이 목록 조회 성공", solutionDetailResponse), HttpStatus.OK);
+    }
+
 }

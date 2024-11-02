@@ -15,6 +15,6 @@ public class ProblemService {
 
     public Problem findById(Long problemId) {
         return problemJpaRepository.findById(problemId).orElseThrow(() ->
-                new NotFoundException(ErrorCode.PROBLEM_NOT_FOUNT));
+                new NotFoundException(ErrorCode.PROBLEM_NOT_FOUND));
     }
 }
