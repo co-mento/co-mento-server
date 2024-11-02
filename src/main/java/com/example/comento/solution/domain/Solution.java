@@ -5,11 +5,14 @@ import com.example.comento.problem.damain.Problem;
 import com.example.comento.user.domain.UserProfile;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.engine.internal.Cascade;
 
 @Entity(name = "solution")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
 public class Solution extends UuidTypeBaseEntity {
 
@@ -37,4 +40,6 @@ public class Solution extends UuidTypeBaseEntity {
     @JoinColumn(name = "problem_id", nullable = false)
     private Problem problem;
 
+    @OneToOne(mappedBy = "solution", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private AiFeedback aiFeedback;
 }
