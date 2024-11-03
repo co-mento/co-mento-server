@@ -39,7 +39,7 @@ public interface ProblemJpaRepository extends JpaRepository<Problem, Long> {
             "order by p.id desc")
     List<ProblemId> getFailedProblemList(UserProfile profile);
 
-    @Query ("select p.id as id " +
+    @Query("select p.id as id " +
             "from problem as p " +
             "where EXISTS (" +
             "   select 1 " +
@@ -48,4 +48,34 @@ public interface ProblemJpaRepository extends JpaRepository<Problem, Long> {
             ")" +
             "order by p.id desc")
     List<ProblemId> getLikedProblemList(UserProfile profile);
+
+    @Query("select p from problem as p " +
+            "join p.problemCategoryList as pc " +
+            "where pc.category.id = :categoryId " +
+            "order by p.id desc")
+    List<Problem> getProblemsByCategoryId(@Param("categoryId") UUID categoryId);
+
+    @Query("select p from problem as p " +
+            "where p.createdAt between :startDate and :endDate " +
+            "order by p.createdAt desc")
+    List<Problem> getProblemsByDateRange(@Param("startDate") LocalDateTime startDate,
+                                         @Param("endDate") LocalDateTime endDate);
+
+    @Query("select count(p) from problem as p " +
+            "join solution as s on p.id = s.problem.id " +
+            "where s.isCorrect = true and s.userProfile = :profile")
+    long countSolvedProblemsByUser(@Param("profile") UserProfile profile);
+
+    @Query("select p from problem as p " +
+            "join p.problemLikes as pl " +
+            "group by p.id " +
+            "order by count(pl) desc")
+    List<Problem> getMostLikedProblems();
+
+    @Query("select p from problem as p " +
+            "join p.problemLevelList as pl " +
+            "where pl.level = :level " +
+            "order by p.id desc")
+    List<Problem> getProblemsByLevel(@Param("level") int level);
 }
+
