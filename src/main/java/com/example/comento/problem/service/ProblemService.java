@@ -17,4 +17,38 @@ public class ProblemService {
         return problemJpaRepository.findById(problemId).orElseThrow(() ->
                 new NotFoundException(ErrorCode.PROBLEM_NOT_FOUND));
     }
+
+    @Transactional
+    public Problem createProblem(Problem problem) {
+        return problemJpaRepository.save(problem);
+    }
+
+    @Transactional
+    public Problem updateProblem(Long problemId, Problem updatedProblem) {
+        Problem existingProblem = findById(problemId);
+
+        existingProblem.setTitle(updatedProblem.getTitle());
+        existingProblem.setContent(updatedProblem.getContent());
+        existingProblem.setInputExplain(updatedProblem.getInputExplain());
+        existingProblem.setOutputExplain(updatedProblem.getOutputExplain());
+        existingProblem.setInputExample(updatedProblem.getInputExample());
+        existingProblem.setOutputExample(updatedProblem.getOutputExample());
+        existingProblem.setTimeLimit(updatedProblem.getTimeLimit());
+        existingProblem.setMemoryLimit(updatedProblem.getMemoryLimit());
+        existingProblem.setSource(updatedProblem.getSource());
+
+        return problemJpaRepository.save(existingProblem);
+    }
+
+    @Transactional
+    public void deleteProblem(Long problemId) {
+        Problem problem = findById(problemId);
+        problemJpaRepository.delete(problem);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Problem> getAllProblems() {
+        return problemJpaRepository.findAll();
+    }
+}
 }
