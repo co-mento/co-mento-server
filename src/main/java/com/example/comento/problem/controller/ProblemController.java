@@ -5,6 +5,7 @@ import com.example.comento.auth.dto.response.Principal;
 import com.example.comento.global.dto.ResponseDto;
 import com.example.comento.like.service.ProblemLikeService;
 import com.example.comento.problem.damain.Problem;
+import com.example.comento.problem.dto.response.ProblemResponse;
 import com.example.comento.problem.service.ProblemService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -46,15 +47,15 @@ public class ProblemController {
 
     @GetMapping
     @Operation(summary = "모든 문제 조회 api")
-    public ResponseEntity<ResponseDto<List<Problem>>> getAllProblems() {
-        List<Problem> problems = problemService.getAllProblems();
+    public ResponseEntity<ResponseDto<List<ProblemResponse>>> getAllProblems() {
+        List<ProblemResponse> problems = problemService.getAllProblems();
         return new ResponseEntity<>(ResponseDto.res(true, "모든 문제 조회 성공", problems), HttpStatus.OK);
     }
 
     @GetMapping("/{problem-id}")
     @Operation(summary = "단일 문제 조회 api")
-    public ResponseEntity<ResponseDto<Problem>> getProblem(@PathVariable("problem-id") Long problemId) {
-        Problem problem = problemService.getProblem(problemId);
+    public ResponseEntity<ResponseDto<ProblemResponse>> getProblem(@PathVariable("problem-id") Long problemId) {
+        ProblemResponse problem = problemService.getProblem(problemId);
         return new ResponseEntity<>(ResponseDto.res(true, "문제 조회 성공", problem), HttpStatus.OK);
     }
 
