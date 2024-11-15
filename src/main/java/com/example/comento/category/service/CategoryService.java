@@ -1,7 +1,7 @@
 package com.example.comento.category.service;
 
 import com.example.comento.category.domain.Category;
-import com.example.comento.category.repository.CategoryRepository;
+import com.example.comento.category.repository.CategoryJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,11 +13,13 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryJpaRepository categoryRepository;
 
     @Transactional
     public Category createCategory(String name) {
-        Category category = new Category(name);
+        Category category = Category.builder()
+                .name(name)
+                .build();
         return categoryRepository.save(category);
     }
 

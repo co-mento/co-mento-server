@@ -3,14 +3,15 @@ package com.example.comento.category.domain;
 import com.example.comento.global.domain.UuidTypeBaseEntity;
 import com.example.comento.problem.damain.ProblemCategory;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity(name = "category")
 @Getter
+@Setter
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category extends UuidTypeBaseEntity {
 
