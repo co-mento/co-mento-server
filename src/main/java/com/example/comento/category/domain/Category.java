@@ -5,12 +5,18 @@ import com.example.comento.problem.damain.ProblemCategory;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity(name = "category")
 @Getter
+@Setter
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Category extends UuidTypeBaseEntity {
 

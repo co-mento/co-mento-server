@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/problems/algorithms")
 @RequiredArgsConstructor
 public class CategoryController {
 
