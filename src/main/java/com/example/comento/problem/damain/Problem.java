@@ -7,12 +7,14 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
 @Entity(name = "problem")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 public class Problem extends LongTypeBaseEntity {
 
     @Column(nullable = false)
@@ -22,22 +24,22 @@ public class Problem extends LongTypeBaseEntity {
     private String content;
 
     @Column(length = 1000, nullable = false)
-    private String input_explain;
+    private String inputExplain;
 
     @Column(length = 1000, nullable = false)
-    private String output_explain;
+    private String outputExplain;
 
     @Column(nullable = false)
-    private String input_example;
+    private String inputExample;
 
     @Column(nullable = false)
-    private String output_example;
+    private String outputExample;
 
     @Column(nullable = false)
-    private int time_limit;
+    private int timeLimit;
 
     @Column(nullable = false)
-    private int memory_limit;
+    private int memoryLimit;
 
     @Column
     private String source;

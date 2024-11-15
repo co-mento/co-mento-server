@@ -6,6 +6,9 @@ import com.example.comento.problem.damain.Problem;
 import com.example.comento.problem.repository.ProblemJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -40,6 +43,11 @@ public class ProblemService {
         return problemJpaRepository.save(existingProblem);
     }
 
+    public Problem getProblem(Long problemId) {
+        problemJpaRepository.findById(problemId);
+        return problemJpaRepository.findById(problemId).get();
+    }
+
     @Transactional
     public void deleteProblem(Long problemId) {
         Problem problem = findById(problemId);
@@ -50,5 +58,4 @@ public class ProblemService {
     public List<Problem> getAllProblems() {
         return problemJpaRepository.findAll();
     }
-}
 }
