@@ -1,5 +1,7 @@
 package com.example.comento.solution.controller;
 
+import com.example.comento.auth.annotation.AuthenticationPrincipal;
+import com.example.comento.auth.dto.response.Principal;
 import com.example.comento.global.dto.ResponseDto;
 import com.example.comento.solution.dto.response.SolutionDetailResponse;
 import com.example.comento.solution.dto.response.SolutionListResponse;
@@ -45,6 +47,14 @@ public class SolutionController {
     public ResponseEntity<ResponseDto<SolutionDetailResponse>> findDetailSolution(@PathVariable(name = "solution-id") UUID solutionId) {
         SolutionDetailResponse solutionDetailResponse = solutionService.findSolution(solutionId);
         return new ResponseEntity<>(ResponseDto.res(true, "풀이 목록 조회 성공", solutionDetailResponse), HttpStatus.OK);
+    }
+
+    @GetMapping("/{solution-id}/ai-review")
+    @Operation(summary = "솔루션에 대한 ai 리뷰 요청", description = "틀린 풀이의 경우 자동으로 ai리뷰가 생성되지 않음. 따라서 클라이언트가 원하는 경우 해당 api를 통해 ai리뷰를 받아볼 수 있도록 함.")
+    public ResponseEntity<ResponseDto<SolutionDetailResponse>> getFailedAiReview(@PathVariable(name = "solution-id") UUID solutionId,
+                                                               @AuthenticationPrincipal Principal principal){
+        SolutionDetailResponse solutionDetailResponse = solutionService.getFailedAiReview(solutionId, principal);
+        return new ResponseEntity<>(ResponseDto.res(true, "ai 리뷰 생성 성공", solutionDetailResponse), HttpStatus.OK);
     }
 
 }
