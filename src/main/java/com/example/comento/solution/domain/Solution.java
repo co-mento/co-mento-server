@@ -42,4 +42,10 @@ public class Solution extends UuidTypeBaseEntity {
 
     @OneToOne(mappedBy = "solution", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private AiFeedback aiFeedback;
+
+    public void registerAiFeedBack(AiFeedback aiFeedback){
+        if(this.aiFeedback == null){
+            this.aiFeedback = aiFeedback;
+        }
+    }
 }
