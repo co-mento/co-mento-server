@@ -29,7 +29,8 @@ public enum ErrorCode {
     SOLUTION_NOT_FOUND("4043", "존재하지 않는 솔루션입니다"),
 
     //Conflict
-    LIKE_CONFLICT("4090", "불가한 좋아요 요청입니다.")
+    LIKE_CONFLICT("4090", "불가한 좋아요 요청입니다."),
+    INVALID_AI_REVIEW("4091", "AI 리뷰 요청이 불가한 솔루션입니다.")
 
 
     ;
