@@ -21,6 +21,12 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.spring.io/milestone' }
+}
+
+ext {
+    //define springAiVersion
+    set('springAiVersion', "1.0.0-M2")
 }
 
 dependencies {
@@ -41,11 +47,20 @@ dependencies {
     //swagger UI
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
-
     //JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+
+    //LLM API
+    implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
+}
+
+dependencyManagement {
+    imports {
+        //set springAiVersion to defined version
+        mavenBom "org.springframework.ai:spring-ai-bom:${springAiVersion}"
+    }
 }
 
 tasks.named('test') {
