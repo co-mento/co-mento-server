@@ -6,6 +6,7 @@ import com.example.comento.auth.util.jwt.AccessTokenProvider;
 import com.example.comento.auth.util.jwt.JwtProvider;
 import com.example.comento.global.exception.NotFoundException;
 import com.example.comento.global.exception.errorcode.ErrorCode;
+import com.example.comento.global.util.CookieUtil;
 import com.example.comento.global.util.UriMatcher;
 import com.example.comento.user.domain.User;
 import com.example.comento.user.domain.UserProfile;
@@ -21,6 +22,8 @@ import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.UUID;
+
+import static com.example.comento.auth.constant.TokenConstant.ACCESS_TOKEN;
 
 @Component
 @RequiredArgsConstructor
@@ -43,9 +46,14 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 
         UriMatcher problemDetailUriMatcher = new UriMatcher(HttpMethod.GET, "/problems/{problem-id}");
         UriMatcher userProfileDetailUriMatcher = new UriMatcher(HttpMethod.GET, "/users/{user-profile-id}");
+        UriMatcher problemPreviewUriMatcher = new UriMatcher(HttpMethod.GET, "/problems");
 
         if(problemDetailUriMatcher.match(request)) return true;
         if(userProfileDetailUriMatcher.match(request)) return true;
+        if(problemPreviewUriMatcher.match(request) && !CookieUtil.isExistCookie(request, ACCESS_TOKEN)) {
+            authenticationContext.setPrincipal(null, null);
+            return true;
+        }
 
         String accessToken = AuthenticationExtractor.extract(request);
         UUID id = UUID.fromString(accessTokenProvider.getPayload(accessToken));
