@@ -1,6 +1,7 @@
-package com.example.comento.problem.repository;
+package com.example.comento.problem.repository.problem;
 
 import com.example.comento.problem.damain.Problem;
+import com.example.comento.problem.repository.problem.ProblemCustomRepository;
 import com.example.comento.solution.dao.ProblemId;
 import com.example.comento.user.domain.UserProfile;
 import lombok.NonNull;
@@ -14,7 +15,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface ProblemJpaRepository extends JpaRepository<Problem, Long> {
+public interface ProblemRepository extends JpaRepository<Problem, Long> , ProblemCustomRepository {
 
     @Query("select p.id as id " +
             "from problem as p " +
@@ -73,10 +74,10 @@ public interface ProblemJpaRepository extends JpaRepository<Problem, Long> {
             "order by count(pl) desc")
     List<Problem> getMostLikedProblems();
 
-    @Query("select p from problem as p " +
-            "join p.problemLevelList as pl " +
-            "where pl.level = :level " +
-            "order by p.id desc")
-    List<Problem> getProblemsByLevel(@Param("level") int level);
+//    @Query("select p from problem as p " +
+//            "join p.problemLevelList as pl " +
+//            "where pl.level = :level " +
+//            "order by p.id desc")
+//    List<Problem> getProblemsByLevel(@Param("level") int level);
 }
 
