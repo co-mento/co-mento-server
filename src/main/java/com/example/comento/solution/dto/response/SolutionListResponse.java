@@ -1,5 +1,6 @@
 package com.example.comento.solution.dto.response;
 
+import com.example.comento.global.dto.PaginationResponse;
 import com.example.comento.solution.dao.SolutionDao;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -13,9 +14,11 @@ import java.util.List;
 public class SolutionListResponse {
 
     private List<SolutionResponse> solutionList;
+    private PaginationResponse paginationResponse;
 
     public static SolutionListResponse from(Page<SolutionDao> solutionDaos){
-        return new SolutionListResponse(solutionDaos.map(SolutionResponse::from).toList());
+        return new SolutionListResponse(solutionDaos.map(SolutionResponse::from).toList(),
+                PaginationResponse.from(solutionDaos));
     }
 
 }
