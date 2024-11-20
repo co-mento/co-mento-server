@@ -3,6 +3,7 @@ package com.example.comento.auth.annotation.resolver;
 import com.example.comento.auth.annotation.AuthenticationPrincipal;
 import com.example.comento.auth.util.authentication.AuthenticationContext;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;

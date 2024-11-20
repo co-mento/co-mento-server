@@ -33,4 +33,17 @@ public class CookieUtil {
         }
         throw new UnauthorizedException(ErrorCode.TOKEN_NOT_FOUND);
     }
+
+    public static boolean isExistCookie(final HttpServletRequest request, final String cookieName){
+        Cookie[] cookies = request.getCookies();
+
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(cookieName)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

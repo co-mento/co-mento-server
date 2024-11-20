@@ -5,7 +5,8 @@ import com.example.comento.auth.dto.response.Principal;
 import com.example.comento.global.dto.ResponseDto;
 import com.example.comento.like.service.ProblemLikeService;
 import com.example.comento.problem.damain.Problem;
-import com.example.comento.problem.dto.response.ProblemResponse;
+import com.example.comento.problem.dto.response.ProblemPreviews;
+import com.example.comento.problem.dto.response.ProblemDetailResponse;
 import com.example.comento.problem.service.ProblemService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.UUID;
+
+import static com.example.comento.global.constant.PagingConstant.DEFAULT_PAGE_NUMBER;
+import static com.example.comento.global.constant.PagingConstant.DEFAULT_SOLUTION_PAGE_SIZE;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,17 +50,24 @@ public class ProblemController {
     }
 
     @GetMapping
-    @Operation(summary = "모든 문제 조회 api")
-    public ResponseEntity<ResponseDto<List<ProblemResponse>>> getAllProblems() {
-        List<ProblemResponse> problems = problemService.getAllProblems();
-        return new ResponseEntity<>(ResponseDto.res(true, "모든 문제 조회 성공", problems), HttpStatus.OK);
+    @Operation(summary = "문제 목록 조회 api")
+    public ResponseEntity<ResponseDto<ProblemPreviews>> getProblems(@AuthenticationPrincipal Principal principal,
+                                                                    @RequestParam(name = "level", required = false) Long levelId,
+                                                                    @RequestParam(name = "category", required = false) UUID categoryId,
+                                                                    @RequestParam(name = "is-solved", required = false) Boolean isSolved,
+                                                                    @RequestParam(name = "collection", required = false) UUID collectionId,
+                                                                    @RequestParam(name = "keyword", required = false) String keyword,
+                                                                    @RequestParam(name = "size", defaultValue = DEFAULT_SOLUTION_PAGE_SIZE) int size,
+                                                                    @RequestParam(name = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page) {
+        ProblemPreviews problems = problemService.getProblems(size, page, principal, levelId, categoryId, isSolved, collectionId, keyword);
+        return new ResponseEntity<>(ResponseDto.res(true, "문제 목록 조회 성공", problems), HttpStatus.OK);
     }
 
     @GetMapping("/{problem-id}")
     @Operation(summary = "단일 문제 조회 api")
-    public ResponseEntity<ResponseDto<ProblemResponse>> getProblem(@PathVariable("problem-id") Long problemId) {
-        ProblemResponse problem = problemService.getProblem(problemId);
-        return new ResponseEntity<>(ResponseDto.res(true, "문제 조회 성공", problem), HttpStatus.OK);
+    public ResponseEntity<ResponseDto<ProblemDetailResponse>> getProblem(@PathVariable("problem-id") Long problemId, @AuthenticationPrincipal Principal principal) {
+        ProblemDetailResponse problem = problemService.getDetailProblem(problemId, principal);
+        return new ResponseEntity<>(ResponseDto.res(true, "문제 상세 조회 성공", problem), HttpStatus.OK);
     }
 
     @PostMapping("/{problem-id}/like")

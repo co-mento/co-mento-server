@@ -6,7 +6,7 @@ import com.example.comento.global.exception.NotFoundException;
 import com.example.comento.global.exception.errorcode.ErrorCode;
 import com.example.comento.problem.damain.Problem;
 import com.example.comento.problem.damain.ProblemCategory;
-import com.example.comento.problem.repository.ProblemJpaRepository;
+import com.example.comento.problem.repository.problem.ProblemRepository;
 import com.example.comento.solution.dao.ProblemId;
 import com.example.comento.solution.dao.SolutionDao;
 import com.example.comento.solution.domain.AiFeedback;
@@ -23,9 +23,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.ChatPromptTemplate;
 import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -44,23 +42,23 @@ import static com.example.comento.solution.templates.LlmApiTemplate.USER_CODE;
 @RequiredArgsConstructor
 @Slf4j
 public class SolutionService {
-    private final ProblemJpaRepository problemJpaRepository;
+    private final ProblemRepository problemRepository;
     private final SolutionJpaRepository solutionJpaRepository;
     private final ChatClient chatClient;
     private final AiFeedbackJpaRepository aiFeedbackJpaRepository;
 
     public ProblemIdsResponse userSolvedList(UserProfile userProfile) {
-        List<ProblemId> problemIdList = problemJpaRepository.getSolvedProblemList(userProfile);
+        List<ProblemId> problemIdList = problemRepository.getSolvedProblemList(userProfile);
         return ProblemIdsResponse.from(problemIdList);
     }
 
     public ProblemIdsResponse userFailedList(UserProfile userProfile) {
-        List<ProblemId> problemIdList = problemJpaRepository.getFailedProblemList(userProfile);
+        List<ProblemId> problemIdList = problemRepository.getFailedProblemList(userProfile);
         return ProblemIdsResponse.from(problemIdList);
     }
 
     public ProblemIdsResponse userLikedList(UserProfile userprofile) {
-        List<ProblemId> problemIdList = problemJpaRepository.getLikedProblemList(userprofile);
+        List<ProblemId> problemIdList = problemRepository.getLikedProblemList(userprofile);
         return ProblemIdsResponse.from(problemIdList);
     }
 
