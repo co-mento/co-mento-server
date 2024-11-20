@@ -40,9 +40,6 @@ public class ProblemRepositoryImpl implements ProblemCustomRepository{
     private final QSolution solution = QSolution.solution;
     private final QCategory category = QCategory.category;
 
-
-
-
     @Override
     public Page<ProblemDetailInformation> getProblemPreviews(Pageable pageable,
                                                    UserProfile profile,
@@ -65,7 +62,7 @@ public class ProblemRepositoryImpl implements ProblemCustomRepository{
             predicate.and(solution.userProfile.eq(profile)).and(solution.isCorrect.eq(isSolved));
         }
         if (collectionId != null) {
-            predicate.and(problemCategory.category.id.eq(categoryId));
+            predicate.and(problemCategory.category.id.eq(collectionId));
         }
         if (keyword != null) {
             predicate.and(problem.title.contains(keyword));

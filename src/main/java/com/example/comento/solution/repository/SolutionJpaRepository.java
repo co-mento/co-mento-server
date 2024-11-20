@@ -1,7 +1,10 @@
 package com.example.comento.solution.repository;
 
+import com.example.comento.problem.damain.Problem;
 import com.example.comento.solution.dao.SolutionDao;
 import com.example.comento.solution.domain.Solution;
+import com.example.comento.user.domain.UserProfile;
+import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,6 +15,11 @@ import java.util.UUID;
 
 @Repository
 public interface SolutionJpaRepository extends JpaRepository<Solution, UUID> {
+
+    @Query("select case when count(s)>1 then true else false end " +
+            "from solution as s " +
+            "where s.userProfile = :profile and s.problem = :problem ")
+    Boolean isUserSolved(UserProfile profile, Problem problem);
 
     @Query("select s.id as id, s.userProfile.name as userName, s.memory as memory, " +
             "s.time as time, s.language as language, s.isCorrect as isCorrect," +
