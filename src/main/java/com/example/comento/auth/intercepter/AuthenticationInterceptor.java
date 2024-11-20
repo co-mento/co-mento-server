@@ -48,7 +48,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
         UriMatcher userProfileDetailUriMatcher = new UriMatcher(HttpMethod.GET, "/users/{user-profile-id}");
         UriMatcher problemPreviewUriMatcher = new UriMatcher(HttpMethod.GET, "/problems");
 
-        if(problemDetailUriMatcher.match(request)) return true;
+        if(problemDetailUriMatcher.match(request) && !CookieUtil.isExistCookie(request, ACCESS_TOKEN)) {
+            authenticationContext.setPrincipal(null, null);
+            return true;
+        }
         if(userProfileDetailUriMatcher.match(request)) return true;
         if(problemPreviewUriMatcher.match(request) && !CookieUtil.isExistCookie(request, ACCESS_TOKEN)) {
             authenticationContext.setPrincipal(null, null);
