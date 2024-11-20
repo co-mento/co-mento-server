@@ -3,6 +3,7 @@ package com.example.comento.user.domain;
 import com.example.comento.global.domain.UuidTypeBaseEntity;
 import com.example.comento.like.domain.ProblemLike;
 import com.example.comento.solution.domain.Solution;
+import com.example.comento.solvedstatus.domain.SolvedStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,5 +36,8 @@ public class UserProfile extends UuidTypeBaseEntity {
 
     @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProblemLike> problemLikes;
+
+    @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<SolvedStatus> solvedStatuses;
 
 }
