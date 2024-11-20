@@ -19,7 +19,7 @@ public class AuthenticationConfig implements WebMvcConfigurer {
 
     private static final String[] EXCLUDE_PATH_PATTERNS = {
             "/auth/sign-up", "/auth/login", "/users/ranking",
-            "/problems/algorithms", "/problems/collections",
+            "/problems/categories", "/problems/collections",
             "/solutions",
             "/swagger-ui/**", "/v3/api-docs/**"
     };

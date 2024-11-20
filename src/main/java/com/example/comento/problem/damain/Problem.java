@@ -4,6 +4,7 @@ import com.example.comento.global.domain.LongTypeBaseEntity;
 import com.example.comento.level.domain.Level;
 import com.example.comento.like.domain.ProblemLike;
 import com.example.comento.solution.domain.Solution;
+import com.example.comento.solvedstatus.domain.SolvedStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -66,5 +67,8 @@ public class Problem extends LongTypeBaseEntity {
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private List<TestCase> testCases;
+
+    @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<SolvedStatus> solvedStatuses;
 
 }

@@ -1,6 +1,7 @@
 package com.example.comento.category.service;
 
 import com.example.comento.category.domain.Category;
+import com.example.comento.category.dto.response.AllCategories;
 import com.example.comento.category.repository.CategoryJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,8 +31,8 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public List<Category> getAllCategories() {
-        return categoryRepository.findAll();
+    public AllCategories getAllCategories() {
+        return AllCategories.from(categoryRepository.findAll());
     }
 
     @Transactional

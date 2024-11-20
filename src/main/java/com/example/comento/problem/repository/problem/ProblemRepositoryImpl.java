@@ -6,6 +6,7 @@ import com.example.comento.problem.damain.*;
 import com.example.comento.problem.dto.response.ProblemDetailInformation;
 import com.example.comento.problem.dto.response.ProblemPreview;
 import com.example.comento.solution.domain.QSolution;
+import com.example.comento.solvedstatus.domain.QSolvedStatus;
 import com.example.comento.user.domain.UserProfile;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
@@ -39,13 +40,14 @@ public class ProblemRepositoryImpl implements ProblemCustomRepository{
     private final QProblemCollection problemCollection = QProblemCollection.problemCollection;
     private final QSolution solution = QSolution.solution;
     private final QCategory category = QCategory.category;
+    private final QSolvedStatus solvedStatus = QSolvedStatus.solvedStatus;
 
     @Override
     public Page<ProblemDetailInformation> getProblemPreviews(Pageable pageable,
-                                                   UserProfile profile,
+                                                   UserProfile profileCondition,
                                                    Long levelId,
                                                    UUID categoryId,
-                                                   Boolean isSolved,
+                                                   Boolean isSolvedCondition,
                                                    UUID collectionId,
                                                    String keyword) {
 
@@ -58,8 +60,16 @@ public class ProblemRepositoryImpl implements ProblemCustomRepository{
             predicate.and(problemCategory.category.id.eq(categoryId));
         }
 
-        if (isSolved != null && profile != null) {
-            predicate.and(solution.userProfile.eq(profile)).and(solution.isCorrect.eq(isSolved));
+
+
+        if (isSolvedCondition != null && profileCondition != null) {
+            if(isSolvedCondition){
+                predicate.and(solution.userProfile.eq(profileCondition)).and(solution.isCorrect.eq(isSolvedCondition));
+            }
+
+            if(!isSolvedCondition){
+                predicate.and(solvedStatus.userProfile.eq(profileCondition)).and(solvedStatus.flag.eq(false));
+            }
         }
         if (collectionId != null) {
             predicate.and(problemCategory.category.id.eq(collectionId));
@@ -70,11 +80,11 @@ public class ProblemRepositoryImpl implements ProblemCustomRepository{
 
         BooleanExpression hasSolved = Expressions.asBoolean(false);
 
-        if (profile != null) {
+        if (profileCondition != null) {
             hasSolved = JPAExpressions.select(solution.count())
                     .from(solution)
                     .where(solution.problem.eq(problem)
-                            .and(solution.userProfile.eq(profile))
+                            .and(solution.userProfile.eq(profileCondition))
                             .and(solution.isCorrect.eq(true)))
                     .exists();
         }
@@ -87,6 +97,7 @@ public class ProblemRepositoryImpl implements ProblemCustomRepository{
                 .leftJoin(problem.problemCategoryList, problemCategory)
                 .leftJoin(problem.problemCollectionList, problemCollection)
                 .leftJoin(problem.solutionList, solution)
+                .leftJoin(problem.solvedStatuses, solvedStatus)
                 .where(predicate)
                 .groupBy(problem.id)
                 .offset(pageable.getOffset())
