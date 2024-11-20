@@ -1,8 +1,12 @@
 package com.example.comento.category.controller;
 
 import com.example.comento.category.domain.Category;
+import com.example.comento.category.dto.response.AllCategories;
 import com.example.comento.category.service.CategoryService;
+import com.example.comento.global.dto.ResponseDto;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,7 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/problems/algorithms")
+@RequestMapping("/problems/categories")
 @RequiredArgsConstructor
 public class CategoryController {
 
@@ -29,9 +33,10 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
-        List<Category> categories = categoryService.getAllCategories();
-        return ResponseEntity.ok(categories);
+    @Operation(summary = "모든 카테고리 목록 조회")
+    public ResponseEntity<ResponseDto<AllCategories>> getAllCategories() {
+        AllCategories categories = categoryService.getAllCategories();
+        return new ResponseEntity<>(ResponseDto.res(true, "카테고리 목록 조회 성공", categories), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
