@@ -17,6 +17,7 @@ public class ProblemPreview {
     private Long problemId;
     private String title;
     private Boolean hasSolved;
+    private Long level;
     private List<String> categories;
 
     public static ProblemPreview from(ProblemDetailInformation problemDetailInformation){
@@ -25,6 +26,7 @@ public class ProblemPreview {
         return new ProblemPreview(problem.getId(),
                 problem.getTitle(),
                 problemDetailInformation.getHasSolved(),
+                problem.getLevel().getId(),
                 problemCategoryList.stream()
                         .map(problemCategory -> problemCategory.getCategory().getName())
                         .toList());
