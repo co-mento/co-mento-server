@@ -8,6 +8,7 @@ import com.example.comento.problem.damain.ProblemLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
@@ -24,9 +25,18 @@ public class ProblemDetailResponse {
     private int timeLimit;
     private int memoryLimit;
     private String source;
+    private Long level;
     private List<String> problemCategoryList;
+    private Long numberOfProblemSolution;
+    private Long numberOfCorrectUser;
+    private Double roundedCorrectRate;
 
-    public static ProblemDetailResponse from(ProblemDetailInformation problemDetailInformation){
+
+
+    public static ProblemDetailResponse from(ProblemDetailInformation problemDetailInformation,
+                                             Long numberOfProblemSolution,
+                                             Long numberOfCorrectUser,
+                                             Double roundedCorrectRate){
         Problem problem = problemDetailInformation.getProblem();
         List<ProblemCategory> problemCategories = problem.getProblemCategoryList();
         return new ProblemDetailResponse(problemDetailInformation.getHasSolved(),
@@ -40,9 +50,13 @@ public class ProblemDetailResponse {
                 problem.getTimeLimit(),
                 problem.getMemoryLimit(),
                 problem.getSource(),
+                problem.getLevel().getId(),
                 problemCategories.stream()
                         .map(problemCategory->problemCategory.getCategory().getName())
-                        .toList());
+                        .toList(),
+                numberOfProblemSolution,
+                numberOfCorrectUser,
+                roundedCorrectRate);
     }
 
 }
