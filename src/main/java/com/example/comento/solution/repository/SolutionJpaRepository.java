@@ -16,6 +16,9 @@ import java.util.UUID;
 @Repository
 public interface SolutionJpaRepository extends JpaRepository<Solution, UUID> {
 
+    public Long countAllByProblem(Problem problem);
+
+
     @Query("select case when count(s)>1 then true else false end " +
             "from solution as s " +
             "where s.userProfile = :profile and s.problem = :problem ")

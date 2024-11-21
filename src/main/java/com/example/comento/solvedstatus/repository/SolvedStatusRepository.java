@@ -13,4 +13,5 @@ import java.util.UUID;
 public interface SolvedStatusRepository extends JpaRepository<SolvedStatus, UUID> {
 
     public Optional<SolvedStatus> findSolvedStatusByProblemAndUserProfile(Problem problem, UserProfile profile);
+    public Long countAllByProblemAndFlag(Problem problem, Boolean flag);
 }

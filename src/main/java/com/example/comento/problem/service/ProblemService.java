@@ -9,6 +9,8 @@ import com.example.comento.problem.dto.response.ProblemPreviews;
 import com.example.comento.problem.dto.response.ProblemDetailResponse;
 import com.example.comento.problem.repository.problem.ProblemRepository;
 import com.example.comento.solution.repository.SolutionJpaRepository;
+import com.example.comento.solvedstatus.domain.SolvedStatus;
+import com.example.comento.solvedstatus.repository.SolvedStatusRepository;
 import com.example.comento.user.domain.UserProfile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -27,6 +31,7 @@ public class ProblemService {
 
     private final ProblemRepository problemRepository;
     private final SolutionJpaRepository solutionJpaRepository;
+    private final SolvedStatusRepository solvedStatusRepository;
 
     public  ProblemPreviews getProblems(int size,
                                        int page,
@@ -81,7 +86,17 @@ public class ProblemService {
             problemDetailInformation = new ProblemDetailInformation(problem, hasSolved);
         }
 
-        return ProblemDetailResponse.from(problemDetailInformation);
+        Long numberOfProblemSolution = solutionJpaRepository.countAllByProblem(problem);
+        Long numberOfCorrect = solvedStatusRepository.countAllByProblemAndFlag(problem, Boolean.TRUE);
+        Double correctRate = numberOfProblemSolution > 0 ?
+                (numberOfCorrect.doubleValue() / numberOfProblemSolution.doubleValue()) * 100 : 0.0;
+
+        BigDecimal roundedCorrectRate = new BigDecimal(correctRate).setScale(3, RoundingMode.HALF_UP);
+
+        return ProblemDetailResponse.from(problemDetailInformation,
+                numberOfProblemSolution,
+                numberOfCorrect,
+                roundedCorrectRate.doubleValue());
     }
 
     @Transactional

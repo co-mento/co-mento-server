@@ -61,15 +61,14 @@ public class ProblemRepositoryImpl implements ProblemCustomRepository{
         }
 
 
-
         if (isSolvedCondition != null && profileCondition != null) {
             if(isSolvedCondition){
                 predicate.and(solution.userProfile.eq(profileCondition)).and(solution.isCorrect.eq(isSolvedCondition));
             }
 
             if(!isSolvedCondition){
-                predicate.and(solvedStatus.userProfile.eq(profileCondition)).and(solvedStatus.flag.eq(false))
-                        .or(solvedStatus.flag.isNull());
+                predicate.and(solvedStatus.userProfile.eq(profileCondition).and(solvedStatus.flag.eq(false))
+                        .or(solvedStatus.flag.isNull()));
             }
         }
         if (collectionId != null) {
