@@ -67,8 +67,9 @@ public class ProblemRepositoryImpl implements ProblemCustomRepository{
             }
 
             if(!isSolvedCondition){
-                predicate.and(solvedStatus.userProfile.eq(profileCondition).and(solvedStatus.flag.eq(false))
-                        .or(solvedStatus.flag.isNull()));
+                //해당 유저의 solvedStatus=true 인 문제 제외. or로 problem 에 solvedStatus 자체가 없는 것도 포함.
+                predicate.and(solvedStatus.userProfile.eq(profileCondition).and(solvedStatus.flag.eq(true)).not()
+                        .or(solvedStatus.isNull()));
             }
         }
         if (collectionId != null) {
@@ -100,6 +101,7 @@ public class ProblemRepositoryImpl implements ProblemCustomRepository{
                 .leftJoin(problem.solvedStatuses, solvedStatus)
                 .where(predicate)
                 .groupBy(problem.id)
+                .orderBy(problem.createdAt.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize());
 //                .fetch();
