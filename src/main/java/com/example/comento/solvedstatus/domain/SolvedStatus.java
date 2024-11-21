@@ -11,7 +11,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "solved_flag")
+@Entity(name = "solved_status")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class SolvedStatus extends UuidTypeBaseEntity {
