@@ -73,7 +73,7 @@ public class ProblemRepositoryImpl implements ProblemCustomRepository{
             }
         }
         if (collectionId != null) {
-            predicate.and(problemCategory.category.id.eq(collectionId));
+            predicate.and(problemCollection.collection.id.eq(collectionId));
         }
         if (keyword != null) {
             predicate.and(problem.title.contains(keyword));
