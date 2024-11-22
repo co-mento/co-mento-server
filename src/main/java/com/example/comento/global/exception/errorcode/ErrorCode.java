@@ -27,6 +27,8 @@ public enum ErrorCode {
     PAGE_NOT_FOUND("4041", "존재하지 않는 페이지입니다."),
     PROBLEM_NOT_FOUND("4042", "존재하지 않는 문제입니다."),
     SOLUTION_NOT_FOUND("4043", "존재하지 않는 솔루션입니다"),
+    LEVEL_NOT_FOUND("4044", "존재하지 않는 레벨입니다."),
+    CATEGORY_NOT_FOUND("4044", "존재하지 않는 카테고리입니다."),
 
     //Conflict
     LIKE_CONFLICT("4090", "불가한 좋아요 요청입니다."),

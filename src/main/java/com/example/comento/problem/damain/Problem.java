@@ -6,17 +6,18 @@ import com.example.comento.like.domain.ProblemLike;
 import com.example.comento.solution.domain.Solution;
 import com.example.comento.solvedstatus.domain.SolvedStatus;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity(name = "problem")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class Problem extends LongTypeBaseEntity {
 
     @Column(nullable = false)
@@ -51,24 +52,25 @@ public class Problem extends LongTypeBaseEntity {
     private Level level;
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Solution> solutionList;
+    private List<Solution> solutionList = new LinkedList<>();
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<ProblemLike> problemLikes;
+    private List<ProblemLike> problemLikes = new LinkedList<>();
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<ProblemCollection> problemCollectionList;
+    private List<ProblemCollection> problemCollectionList = new ArrayList<>();
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<ProblemCategory> problemCategoryList;
+    private List<ProblemCategory> problemCategoryList = new LinkedList<>();
 
 //    @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 //    private List<ProblemLevel> problemLevelList;
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<TestCase> testCases;
+    private List<TestCase> testCases = new LinkedList<>();
 
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<SolvedStatus> solvedStatuses;
+    private List<SolvedStatus> solvedStatuses = new LinkedList<>();
+
 
 }

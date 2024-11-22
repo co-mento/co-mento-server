@@ -3,6 +3,8 @@ package com.example.comento.category.service;
 import com.example.comento.category.domain.Category;
 import com.example.comento.category.dto.response.AllCategories;
 import com.example.comento.category.repository.CategoryJpaRepository;
+import com.example.comento.global.exception.NotFoundException;
+import com.example.comento.global.exception.errorcode.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,5 +48,10 @@ public class CategoryService {
     public void deleteCategory(UUID categoryId) {
         Category category = getCategory(categoryId);
         categoryRepository.delete(category);
+    }
+
+    public Category find(String name){
+        return categoryRepository.findCategoryByName(name).orElseThrow(()->
+                new NotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
     }
 }
