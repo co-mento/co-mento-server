@@ -1,12 +1,22 @@
 package com.example.comento.problem.service;
 
 import com.example.comento.auth.dto.response.Principal;
+import com.example.comento.category.domain.Category;
+import com.example.comento.category.service.CategoryService;
 import com.example.comento.global.exception.NotFoundException;
 import com.example.comento.global.exception.errorcode.ErrorCode;
+import com.example.comento.level.domain.Level;
+import com.example.comento.level.repository.LevelJpaRepository;
+import com.example.comento.level.service.LevelService;
 import com.example.comento.problem.damain.Problem;
+import com.example.comento.problem.damain.ProblemCategory;
+import com.example.comento.problem.damain.TestCase;
+import com.example.comento.problem.dto.request.ProblemRegisterRequest;
 import com.example.comento.problem.dto.response.ProblemDetailInformation;
 import com.example.comento.problem.dto.response.ProblemPreviews;
 import com.example.comento.problem.dto.response.ProblemDetailResponse;
+import com.example.comento.problem.repository.ProblemCategoryJpaRepository;
+import com.example.comento.problem.repository.TestCaseJpaRepository;
 import com.example.comento.problem.repository.problem.ProblemRepository;
 import com.example.comento.solution.repository.SolutionJpaRepository;
 import com.example.comento.solvedstatus.domain.SolvedStatus;
@@ -22,16 +32,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 @Slf4j
 public class ProblemService {
+    private final LevelService levelService;
+    private final CategoryService categoryService;
 
     private final ProblemRepository problemRepository;
     private final SolutionJpaRepository solutionJpaRepository;
     private final SolvedStatusRepository solvedStatusRepository;
+    private final ProblemCategoryJpaRepository problemCategoryJpaRepository;
+    private final TestCaseJpaRepository testCaseJpaRepository;
 
     public  ProblemPreviews getProblems(int size,
                                        int page,
@@ -55,8 +72,10 @@ public class ProblemService {
     }
 
     @Transactional
-    public Problem createProblem(Problem problem) {
-        return problemRepository.save(problem);
+    public void createProblem(ProblemRegisterRequest problemRegisterRequest) {
+        Problem problem = registerProblem(problemRegisterRequest);
+        registerCategory(problemRegisterRequest.getCategoryNames(), problem);
+        registerTestCase(problemRegisterRequest.getTestcases(), problem);
     }
 
     @Transactional
@@ -103,6 +122,51 @@ public class ProblemService {
     public void deleteProblem(Long problemId) {
         Problem problem = findById(problemId);
         problemRepository.delete(problem);
+    }
+
+    private Problem registerProblem(ProblemRegisterRequest problemRegisterRequest){
+        Level level = levelService.find(problemRegisterRequest.getLevel());
+
+        Problem problem = Problem.builder()
+                .title(problemRegisterRequest.getTitle())
+                .content(problemRegisterRequest.getContent())
+                .inputExplain(problemRegisterRequest.getInputExplain())
+                .outputExplain(problemRegisterRequest.getOutputExplain())
+                .inputExample(problemRegisterRequest.getInputExample())
+                .outputExample(problemRegisterRequest.getOutputExample())
+                .level(level)
+                .timeLimit(problemRegisterRequest.getTimeLimit())
+                .memoryLimit(problemRegisterRequest.getMemoryLimit())
+                .source(problemRegisterRequest.getSource())
+                .problemCategoryList(new LinkedList<>())
+                .problemCollectionList(new ArrayList<>())
+                .solvedStatuses(new LinkedList<>())
+                .testCases(new LinkedList<>())
+                .build();
+
+        level.getProblems().add(problem);
+
+        return problemRepository.save(problem);
+    }
+
+    private void registerCategory(List<String> categoryNames, Problem problem){
+        categoryNames.stream()
+                .map(categoryService::find)
+                .forEach(category -> {
+                    ProblemCategory problemCategory = new ProblemCategory(category, problem);
+                    category.getProblemCategoryList().add(problemCategory);
+                    problem.getProblemCategoryList().add(problemCategory);
+                    problemCategoryJpaRepository.save(problemCategory);
+                });
+    }
+
+    private void registerTestCase(List<ProblemRegisterRequest.TestCaseRequired> testCases,
+                                  Problem problem){
+        testCases.forEach(testCaseRequired -> {
+            TestCase testCase = new TestCase(problem, testCaseRequired.input(), testCaseRequired.output());
+            problem.getTestCases().add(testCase);
+            testCaseJpaRepository.save(testCase);
+        });
     }
 
 }

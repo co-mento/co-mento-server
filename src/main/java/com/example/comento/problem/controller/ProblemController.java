@@ -27,13 +27,6 @@ public class ProblemController {
     private final ProblemLikeService problemLikeService;
     private final ProblemService problemService;
 
-    @PostMapping
-    @Operation(summary = "문제 작성 api")
-    public ResponseEntity<ResponseDto<Problem>> createProblem(@RequestBody Problem problem) {
-        Problem createdProblem = problemService.createProblem(problem);
-        return new ResponseEntity<>(ResponseDto.res(true, "문제 작성 성공", createdProblem), HttpStatus.CREATED);
-    }
-
     @PutMapping("/{problem-id}")
     @Operation(summary = "문제 수정 api")
     public ResponseEntity<ResponseDto<Problem>> updateProblem(@PathVariable("problem-id") Long problemId,
