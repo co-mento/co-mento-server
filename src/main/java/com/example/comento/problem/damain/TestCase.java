@@ -3,11 +3,13 @@ package com.example.comento.problem.damain;
 import com.example.comento.global.domain.UuidTypeBaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "test_case")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
 public class TestCase extends UuidTypeBaseEntity {
 
