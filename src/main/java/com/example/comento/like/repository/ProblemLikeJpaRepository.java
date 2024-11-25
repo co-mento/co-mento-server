@@ -13,4 +13,6 @@ import java.util.UUID;
 public interface ProblemLikeJpaRepository extends JpaRepository<ProblemLike, UUID> {
 
     Optional<ProblemLike> findByUserProfileAndProblem(UserProfile userProfile, Problem problem);
+
+    Boolean existsByProblemAndUserProfile(Problem problem, UserProfile userProfile);
 }
