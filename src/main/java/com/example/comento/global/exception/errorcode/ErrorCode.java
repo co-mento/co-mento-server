@@ -29,12 +29,14 @@ public enum ErrorCode {
     SOLUTION_NOT_FOUND("4043", "존재하지 않는 솔루션입니다"),
     LEVEL_NOT_FOUND("4044", "존재하지 않는 레벨입니다."),
     CATEGORY_NOT_FOUND("4044", "존재하지 않는 카테고리입니다."),
+    LANGUAGE_NOT_FOUND("4045", "존재하지 않는 언어입니다."),
 
     //Conflict
     LIKE_CONFLICT("4090", "불가한 좋아요 요청입니다."),
-    INVALID_AI_REVIEW("4091", "AI 리뷰 요청이 불가한 솔루션입니다.")
+    INVALID_AI_REVIEW("4091", "AI 리뷰 요청이 불가한 솔루션입니다."),
+    TEST_CASE_PARSE_ERROR("4092", "테스트 케이스 파싱 오류입니다."),
 
-
+    GRADING_SERVER_ERROR("5000", "채점 서버 응답에 실패했습니다.")
     ;
 
 

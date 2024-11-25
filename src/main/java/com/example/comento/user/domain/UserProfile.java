@@ -40,4 +40,8 @@ public class UserProfile extends UuidTypeBaseEntity {
     @OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<SolvedStatus> solvedStatuses;
 
+    public void increaseExperience(Long experience){
+        this.experience += experience;
+    }
+
 }

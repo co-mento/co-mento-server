@@ -15,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProblemDetailResponse {
     private Boolean hasSolved;
+    private Boolean hasLiked;
     private Long id;
     private String title;
     private String content;
@@ -34,12 +35,14 @@ public class ProblemDetailResponse {
 
 
     public static ProblemDetailResponse from(ProblemDetailInformation problemDetailInformation,
+                                             Boolean hasLiked,
                                              Long numberOfProblemSolution,
                                              Long numberOfCorrectUser,
                                              Double roundedCorrectRate){
         Problem problem = problemDetailInformation.getProblem();
         List<ProblemCategory> problemCategories = problem.getProblemCategoryList();
         return new ProblemDetailResponse(problemDetailInformation.getHasSolved(),
+                hasLiked,
                 problem.getId(),
                 problem.getTitle(),
                 problem.getContent(),

@@ -8,6 +8,7 @@ import com.example.comento.global.exception.errorcode.ErrorCode;
 import com.example.comento.level.domain.Level;
 import com.example.comento.level.repository.LevelJpaRepository;
 import com.example.comento.level.service.LevelService;
+import com.example.comento.like.repository.ProblemLikeJpaRepository;
 import com.example.comento.problem.damain.Problem;
 import com.example.comento.problem.damain.ProblemCategory;
 import com.example.comento.problem.damain.TestCase;
@@ -19,7 +20,6 @@ import com.example.comento.problem.repository.ProblemCategoryJpaRepository;
 import com.example.comento.problem.repository.TestCaseJpaRepository;
 import com.example.comento.problem.repository.problem.ProblemRepository;
 import com.example.comento.solution.repository.SolutionJpaRepository;
-import com.example.comento.solvedstatus.domain.SolvedStatus;
 import com.example.comento.solvedstatus.repository.SolvedStatusRepository;
 import com.example.comento.user.domain.UserProfile;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +49,7 @@ public class ProblemService {
     private final SolvedStatusRepository solvedStatusRepository;
     private final ProblemCategoryJpaRepository problemCategoryJpaRepository;
     private final TestCaseJpaRepository testCaseJpaRepository;
+    private final ProblemLikeJpaRepository problemLikeJpaRepository;
 
     public  ProblemPreviews getProblems(int size,
                                        int page,
@@ -99,9 +100,11 @@ public class ProblemService {
         Problem problem = findById(problemId);
         UserProfile userProfile = principal.getProfile();
         ProblemDetailInformation problemDetailInformation =  new ProblemDetailInformation(problem, false);
-        
+        Boolean hasLiked = false;
+
         if(userProfile != null){
             Boolean hasSolved = solutionJpaRepository.isUserSolved(userProfile, problem);
+            hasLiked = problemLikeJpaRepository.existsByProblemAndUserProfile(problem, userProfile);
             problemDetailInformation = new ProblemDetailInformation(problem, hasSolved);
         }
 
@@ -113,6 +116,7 @@ public class ProblemService {
         BigDecimal roundedCorrectRate = new BigDecimal(correctRate).setScale(3, RoundingMode.HALF_UP);
 
         return ProblemDetailResponse.from(problemDetailInformation,
+                hasLiked,
                 numberOfProblemSolution,
                 numberOfCorrect,
                 roundedCorrectRate.doubleValue());

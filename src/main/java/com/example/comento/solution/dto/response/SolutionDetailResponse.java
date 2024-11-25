@@ -20,7 +20,8 @@ public class SolutionDetailResponse {
     private String aiFeedback;
 
     private String language;
-    private int time;
+    private String errorReason;
+    private String time;
     private int memory;
     private boolean isCorrect;
     private String timeAgo;
@@ -34,6 +35,7 @@ public class SolutionDetailResponse {
                 solution.getCode(),
                 solution.getAiFeedback() != null ? solution.getAiFeedback().getContent() : null,
                 solution.getLanguage(),
+                solution.getErrorReason(),
                 solution.getTime(),
                 solution.getMemory(),
                 solution.isCorrect(),

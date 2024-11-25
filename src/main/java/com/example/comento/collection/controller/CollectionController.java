@@ -22,7 +22,7 @@ public class CollectionController {
     @Operation(summary = "모든 문제집 목록 조회")
     public ResponseEntity<ResponseDto<AllCollections>> getAllCategories() {
         AllCollections allCollections = collectionService.getAllCollection();
-        return new ResponseEntity<>(ResponseDto.res(true, "카테고리 목록 조회 성공", allCollections), HttpStatus.OK);
+        return new ResponseEntity<>(ResponseDto.res(true, "문제집 목록 조회 성공", allCollections), HttpStatus.OK);
     }
 
 }
