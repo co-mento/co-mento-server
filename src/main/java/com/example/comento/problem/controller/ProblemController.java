@@ -8,6 +8,9 @@ import com.example.comento.problem.damain.Problem;
 import com.example.comento.problem.dto.response.ProblemPreviews;
 import com.example.comento.problem.dto.response.ProblemDetailResponse;
 import com.example.comento.problem.service.ProblemService;
+import com.example.comento.solution.dto.request.SolutionRequest;
+import com.example.comento.solution.dto.response.SolutionDetailResponse;
+import com.example.comento.solution.service.SolutionService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,6 +29,16 @@ public class ProblemController {
 
     private final ProblemLikeService problemLikeService;
     private final ProblemService problemService;
+    private final SolutionService solutionService;
+
+    @PostMapping("/{problem-id}")
+    @Operation(summary = "문제 풀이 제출 api")
+    public ResponseEntity<ResponseDto<SolutionDetailResponse>> solveProblem(@PathVariable("problem-id") Long problemId,
+                                                             @RequestBody SolutionRequest solutionRequest,
+                                                             @AuthenticationPrincipal Principal principal) {
+        SolutionDetailResponse solutionDetailResponse = solutionService.solveProblem(principal, problemId, solutionRequest);
+        return new ResponseEntity<>(ResponseDto.res(true, "풀이 제출 성공", solutionDetailResponse), HttpStatus.OK);
+    }
 
     @PutMapping("/{problem-id}")
     @Operation(summary = "문제 수정 api")

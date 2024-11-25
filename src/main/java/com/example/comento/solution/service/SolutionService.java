@@ -2,21 +2,34 @@ package com.example.comento.solution.service;
 
 import com.example.comento.auth.dto.response.Principal;
 import com.example.comento.global.exception.BadRequestException;
+import com.example.comento.global.exception.ConflictException;
+import com.example.comento.global.exception.InternetException;
 import com.example.comento.global.exception.NotFoundException;
 import com.example.comento.global.exception.errorcode.ErrorCode;
 import com.example.comento.problem.damain.Problem;
 import com.example.comento.problem.damain.ProblemCategory;
+import com.example.comento.problem.damain.TestCase;
+import com.example.comento.problem.dto.request.TestCaseRequest;
 import com.example.comento.problem.repository.problem.ProblemRepository;
+import com.example.comento.problem.service.ProblemService;
 import com.example.comento.solution.dao.ProblemId;
 import com.example.comento.solution.dao.SolutionDao;
 import com.example.comento.solution.domain.AiFeedback;
+import com.example.comento.solution.domain.Language;
 import com.example.comento.solution.domain.Solution;
+import com.example.comento.solution.dto.request.GradingServerRequest;
+import com.example.comento.solution.dto.request.SolutionRequest;
+import com.example.comento.solution.dto.response.GradingServerResponse;
 import com.example.comento.solution.dto.response.ProblemIdsResponse;
 import com.example.comento.solution.dto.response.SolutionDetailResponse;
 import com.example.comento.solution.dto.response.SolutionListResponse;
 import com.example.comento.solution.repository.AiFeedbackJpaRepository;
 import com.example.comento.solution.repository.SolutionJpaRepository;
+import com.example.comento.solvedstatus.service.SolvedStatusService;
+import com.example.comento.user.domain.User;
 import com.example.comento.user.domain.UserProfile;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -25,15 +38,20 @@ import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static com.example.comento.solution.templates.LlmApiTemplate.CODE_REVIEW_SYSTEM_TEXT;
 import static com.example.comento.solution.templates.LlmApiTemplate.USER_CODE;
@@ -42,25 +60,23 @@ import static com.example.comento.solution.templates.LlmApiTemplate.USER_CODE;
 @RequiredArgsConstructor
 @Slf4j
 public class SolutionService {
-    private final ProblemRepository problemRepository;
+
+    private final ProblemService problemService;
+    private final SolvedStatusService solvedStatusService;
+
+//    private final ProblemRepository problemRepository;
     private final SolutionJpaRepository solutionJpaRepository;
-    private final ChatClient chatClient;
     private final AiFeedbackJpaRepository aiFeedbackJpaRepository;
 
-    public ProblemIdsResponse userSolvedList(UserProfile userProfile) {
-        List<ProblemId> problemIdList = problemRepository.getSolvedProblemList(userProfile);
-        return ProblemIdsResponse.from(problemIdList);
-    }
+    private final WebClient.Builder webClientBuilder;
+    private final ChatClient chatClient;
 
-    public ProblemIdsResponse userFailedList(UserProfile userProfile) {
-        List<ProblemId> problemIdList = problemRepository.getFailedProblemList(userProfile);
-        return ProblemIdsResponse.from(problemIdList);
-    }
 
-    public ProblemIdsResponse userLikedList(UserProfile userprofile) {
-        List<ProblemId> problemIdList = problemRepository.getLikedProblemList(userprofile);
-        return ProblemIdsResponse.from(problemIdList);
-    }
+    private final static String TEST_CASE_PARSER = "\\{\"testCases\":(\\[.*?])}";
+    private final static String CORRECT_STATUS = "Accepted";
+
+    @Value("${submit.site.url}")
+    private String submitSiteUri;
 
     public SolutionListResponse findAllAboutProblem(Long problemId, int page, int size, UUID userProfileId) {
         Pageable pageable = PageRequest.of(page, size);
@@ -103,6 +119,83 @@ public class SolutionService {
         return SolutionDetailResponse.from(solution);
     }
 
+    @Transactional
+    public SolutionDetailResponse solveProblem(Principal principal,
+                                               Long problemId,
+                                               SolutionRequest solutionRequest){
+        Problem problem = problemService.findById(problemId);
+        UserProfile userProfile = principal.getProfile();
+        List<TestCaseRequest> testCases = problem.getTestCases().stream()
+                .map(TestCaseRequest::from)
+                .toList();
+        Language language = Language.find(solutionRequest.getLanguage());
+        GradingServerResponse gradingServerResponse = checkTestCases(testCases, problem, language, solutionRequest.getCode());
+        Solution newSolution = registerSolution(userProfile, solutionRequest.getCode(), problem, language, gradingServerResponse);
+        if(newSolution.isCorrect()){
+            userProfile.increaseExperience(problem.getLevel().getExperience());
+            generateAiReview(problem, newSolution);
+        }
+        solvedStatusService.registerSolvedStatus(userProfile, problem, newSolution.isCorrect());
+        return SolutionDetailResponse.from(newSolution);
+    }
+
+    private Solution registerSolution(UserProfile profile, String code, Problem problem, Language language, GradingServerResponse serverResponse){
+        Boolean isCorrect = serverResponse.isAllSuccess();
+        String errorReason = CORRECT_STATUS;
+        if (!isCorrect){
+            errorReason = serverResponse.getResults().stream()
+                    .filter(result -> !result.getStatus().equals(CORRECT_STATUS))
+                    .findFirst()
+                    .orElseGet(null)
+                    .getStatus();
+        }
+        return Solution.builder()
+                .userProfile(profile)
+                .problem(problem)
+                .language(language.getName())
+                .isCorrect(isCorrect)
+                .code(code)
+                .memory(serverResponse.getMaxMemory())
+                .time(serverResponse.getMaxTime())
+                .errorReason(errorReason)
+                .build();
+    }
+
+    private GradingServerResponse checkTestCases(List<TestCaseRequest> testCases,
+                                Problem problem,
+                                Language language,
+                                String code){
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String testCaseJson = objectMapper.writeValueAsString(testCases);
+            return sendToGradingServer(testCaseJson, problem, code, language);
+
+        } catch (JsonProcessingException e) {
+            throw new ConflictException(ErrorCode.TEST_CASE_PARSE_ERROR);
+        }
+    }
+
+    private GradingServerResponse sendToGradingServer(String testCaseJson, Problem problem, String code, Language language){
+        GradingServerRequest serverRequest = GradingServerRequest.builder()
+                .source_code(code)
+                .language_id(language.getId())
+                .test_case(testCaseJson)
+                .cpu_time_limit(String.valueOf(problem.getTimeLimit()))
+                .memory_limit(String.valueOf(problem.getMemoryLimit()))
+                .build();
+
+        log.info("serverRequest: "+serverRequest.toString());
+        return webClientBuilder
+                .baseUrl(submitSiteUri)
+                .build()
+                .post()
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(serverRequest)
+                .retrieve()
+                .bodyToMono(GradingServerResponse.class)
+                .block();
+    }
+
     private void validAiReviewRequest(Solution solution, UserProfile profile){
         if (solution.getAiFeedback()==null && !solution.isCorrect() && solution.getUserProfile().getId().equals(profile.getId())){
             return;
@@ -120,7 +213,6 @@ public class SolutionService {
                 .call()
                 .chatResponse();
 
-        log.info("response.getResult(): "+ String.valueOf(response.getResult()));
         AiFeedback aiFeedback = AiFeedback.builder()
                 .solution(solution)
                 .content(String.valueOf(response.getResult().getOutput().getContent()))

@@ -20,7 +20,6 @@ import com.example.comento.problem.repository.ProblemCategoryJpaRepository;
 import com.example.comento.problem.repository.TestCaseJpaRepository;
 import com.example.comento.problem.repository.problem.ProblemRepository;
 import com.example.comento.solution.repository.SolutionJpaRepository;
-import com.example.comento.solvedstatus.domain.SolvedStatus;
 import com.example.comento.solvedstatus.repository.SolvedStatusRepository;
 import com.example.comento.user.domain.UserProfile;
 import lombok.RequiredArgsConstructor;
