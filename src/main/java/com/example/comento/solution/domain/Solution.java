@@ -4,16 +4,13 @@ import com.example.comento.global.domain.UuidTypeBaseEntity;
 import com.example.comento.problem.damain.Problem;
 import com.example.comento.user.domain.UserProfile;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.engine.internal.Cascade;
+import lombok.*;
 
 @Entity(name = "solution")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Getter
+@Builder
 public class Solution extends UuidTypeBaseEntity {
 
     @Column(nullable = false)
@@ -29,7 +26,10 @@ public class Solution extends UuidTypeBaseEntity {
     private int memory;
 
     @Column(nullable = false)
-    private int time;
+    private String time;
+
+    @Column(nullable = true)
+    private String errorReason;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_profile_id", nullable = false)
