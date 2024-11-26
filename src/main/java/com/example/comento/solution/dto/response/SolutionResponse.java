@@ -19,7 +19,7 @@ public class SolutionResponse {
     private String userName;
 
     private String language;
-    private int time;
+    private String time;
     private int memory;
     private boolean isCorrect;
     private String timeAgo;
