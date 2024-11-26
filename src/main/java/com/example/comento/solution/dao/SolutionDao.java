@@ -12,7 +12,7 @@ public interface SolutionDao {
     String getUserName();
 
     int getMemory();
-    int getTime();
+    String getTime();
     String getLanguage();
     boolean getIsCorrect();
 
