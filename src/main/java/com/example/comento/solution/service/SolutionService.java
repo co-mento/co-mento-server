@@ -28,6 +28,7 @@ import com.example.comento.solution.repository.SolutionJpaRepository;
 import com.example.comento.solvedstatus.service.SolvedStatusService;
 import com.example.comento.user.domain.User;
 import com.example.comento.user.domain.UserProfile;
+import com.example.comento.user.repository.UserProfileJpaRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +68,7 @@ public class SolutionService {
 //    private final ProblemRepository problemRepository;
     private final SolutionJpaRepository solutionJpaRepository;
     private final AiFeedbackJpaRepository aiFeedbackJpaRepository;
+    private final UserProfileJpaRepository userProfileJpaRepository;
 
     private final WebClient.Builder webClientBuilder;
     private final ChatClient chatClient;
@@ -134,6 +136,9 @@ public class SolutionService {
         if(newSolution.isCorrect()){
             userProfile.increaseExperience(problem.getLevel().getExperience());
             generateAiReview(problem, newSolution);
+            userProfileJpaRepository.save(userProfile);
+        }else{
+            solutionJpaRepository.save(newSolution);
         }
         solvedStatusService.registerSolvedStatus(userProfile, problem, newSolution.isCorrect());
         return SolutionDetailResponse.from(newSolution);
