@@ -20,4 +20,6 @@ public interface SolvedStatusRepository extends JpaRepository<SolvedStatus, UUID
 
     public List<SolvedStatus> findAllByUserProfileAndFlagIsTrue(UserProfile userProfile);
     public List<SolvedStatus> findAllByUserProfileAndFlagIsFalse(UserProfile userProfile);
+
+    public Boolean existsByUserProfileAndProblemAndFlagIsTrue(UserProfile userProfile, Problem problem);
 }
