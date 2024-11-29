@@ -31,4 +31,8 @@ public class SolvedStatusService {
     public SolvedStatus find(UserProfile profile, Problem problem){
         return solvedStatusRepository.findByUserProfileAndProblem(profile, problem).orElseGet(null);
     }
+
+    public boolean isSolvedStatusTrue(UserProfile userProfile, Problem problem){
+        return solvedStatusRepository.existsByUserProfileAndProblemAndFlagIsTrue(userProfile, problem);
+    }
 }
