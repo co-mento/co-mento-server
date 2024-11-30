@@ -23,4 +23,6 @@ public interface UserProfileJpaRepository extends JpaRepository<UserProfile, UUI
             "group by up.id " +
             "order by up.experience DESC, up.name ")
     Page<UserRankProfile> getUserRanking(Pageable pageable);
+
+    Long countUserProfilesByExperienceGreaterThan(Long experience);
 }
