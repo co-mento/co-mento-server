@@ -134,8 +134,10 @@ public class SolutionService {
         GradingServerResponse gradingServerResponse = checkTestCases(testCases, problem, language, solutionRequest.getCode());
         Solution newSolution = registerSolution(userProfile, solutionRequest.getCode(), problem, language, gradingServerResponse);
         if(newSolution.isCorrect()){
-            userProfile.increaseExperience(problem.getLevel().getExperience());
             generateAiReview(problem, newSolution);
+            if(!solvedStatusService.isSolvedStatusTrue(userProfile, problem)){
+                userProfile.increaseExperience(problem.getLevel().getExperience());
+            }
             userProfileJpaRepository.save(userProfile);
         }else{
             solutionJpaRepository.save(newSolution);

@@ -27,11 +27,16 @@ public class UserProfileService {
     public DetailUserProfileResponse getDetailProfile(UUID userProfileId){
         UserProfile userProfile = findById(userProfileId);
 
+        Long experienceGreaterThanUser = userProfileJpaRepository.
+                countUserProfilesByExperienceGreaterThan(userProfile.getExperience());
+
         ProblemIdsResponse solvedProblemIds = userSolvedList(userProfile);
         ProblemIdsResponse failedProblemIds = userFailedList(userProfile);
         ProblemIdsResponse likedProblemIds = userLikedList(userProfile);
 
-        return DetailUserProfileResponse.from(userProfile, solvedProblemIds, failedProblemIds, likedProblemIds);
+        return DetailUserProfileResponse.from(userProfile,
+                solvedProblemIds, failedProblemIds, likedProblemIds,
+                experienceGreaterThanUser + 1);
     }
 
     public UserProfileResponse getProfileResponse(User user){
