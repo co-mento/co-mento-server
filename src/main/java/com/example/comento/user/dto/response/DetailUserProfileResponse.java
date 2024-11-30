@@ -12,6 +12,7 @@ import java.util.List;
 public class DetailUserProfileResponse {
     private final String name;
     private final Long experience;
+    private final Long ranking;
     private final List<Long> solvedProblemIds;
     private final List<Long> failedProblemIds;
     private final List<Long> likedProblemIds;
@@ -20,11 +21,13 @@ public class DetailUserProfileResponse {
             UserProfile profile,
             ProblemIdsResponse solvedProblemIds,
             ProblemIdsResponse failedProblemIds,
-            ProblemIdsResponse likedProblemIds){
+            ProblemIdsResponse likedProblemIds,
+            Long ranking){
 
         return new DetailUserProfileResponse(
                 profile.getName(),
                 profile.getExperience(),
+                ranking,
                 solvedProblemIds.getProblemIds(),
                 failedProblemIds.getProblemIds(),
                 likedProblemIds.getProblemIds());
