@@ -54,9 +54,8 @@ public class AuthController {
     @Operation(summary = "로그아웃 api", description = "토큰이 만료되도록 하여 로그아웃 됨")
     public ResponseEntity<ResponseDto<Void>> logout(@AuthenticationPrincipal Principal principal, HttpServletResponse response){
         TokenResponseCookies cookies = tokenService.issueExpiredToken();
-        response.addHeader("set-cookies", cookies.getAccessToken().toString());
+        response.addHeader("set-cookie", cookies.getAccessToken().toString());
         return new ResponseEntity<>(ResponseDto.res(true, "로그아웃 성공"), HttpStatus.OK);
     }
-
 
 }
