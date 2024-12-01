@@ -1,6 +1,7 @@
 package com.example.comento.user.domain;
 
 import com.example.comento.global.domain.UuidTypeBaseEntity;
+import com.example.comento.user.domain.enums.Social;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -27,11 +28,15 @@ public class User extends UuidTypeBaseEntity {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private UserProfile userProfile;
 
-    public User (String userId, String password, String salt, String name){
+    @Column
+    private Social social;
+
+    public User (String userId, String password, String salt, String name, Social social){
         this.userId = userId;
         this.password = password;
         this.salt = salt;
         this.userProfile = new UserProfile(this, name);
+        this.social = social;
     }
 
 }
