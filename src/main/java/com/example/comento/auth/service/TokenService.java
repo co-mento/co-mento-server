@@ -23,6 +23,11 @@ public class TokenService {
         return new TokenResponseCookies(accessTokenCookie);
     }
 
+    public TokenResponseCookies issueToken(String payload, String domain){
+        ResponseCookie accessTokenCookie = createAccessTokenCookie(payload, domain);
+        return new TokenResponseCookies(accessTokenCookie);
+    }
+
     public TokenResponseCookies issueExpiredToken(){
         ResponseCookie expiredTokenCookie = createExpiredAccessTokenCookies();
         return new TokenResponseCookies(expiredTokenCookie);
@@ -32,6 +37,12 @@ public class TokenService {
         String accessToken = accessTokenProvider.createToken(payload);
         String bearerToken = JwtEncoder.encodeJwtToken(accessToken);
         return  CookieUtil.createTokenCookie(ACCESS_TOKEN, bearerToken, ACCESS_TOKEN_MAX_AGE);
+    }
+
+    private ResponseCookie createAccessTokenCookie(String payload, String domain){
+        String accessToken = accessTokenProvider.createToken(payload);
+        String bearerToken = JwtEncoder.encodeJwtToken(accessToken);
+        return CookieUtil.createTokenCookie(ACCESS_TOKEN, bearerToken, ACCESS_TOKEN_MAX_AGE, domain);
     }
 
     private ResponseCookie createExpiredAccessTokenCookies(){
