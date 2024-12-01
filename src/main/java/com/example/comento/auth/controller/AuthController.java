@@ -17,10 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
@@ -33,7 +30,7 @@ public class AuthController {
     private final UserProfileService userProfileService;
 
     @PostMapping("/sign-up")
-    @Operation(summary = "회원가입 api", description = "userId, password, email, name을 입력하여 회원가입")
+    @Operation(summary = "회원가입 api", description = "userId, password, name을 입력하여 회원가입")
     public ResponseEntity<ResponseDto<Void>> signUp(@Valid @RequestBody SignUpRequest request){
         authService.signUp(request);
         return new ResponseEntity<>(ResponseDto.res(true, "회원가입 성공"), HttpStatus.CREATED);
@@ -56,6 +53,20 @@ public class AuthController {
         TokenResponseCookies cookies = tokenService.issueExpiredToken();
         response.addHeader("set-cookie", cookies.getAccessToken().toString());
         return new ResponseEntity<>(ResponseDto.res(true, "로그아웃 성공"), HttpStatus.OK);
+    }
+
+    @GetMapping("/redirect/naver")
+    @Operation(summary = "네이버 로그인 시 리다이렉트 uri", description = "프론트에서 요청하는 uri가 아님. 네이버 OAuth 사용시 자동으로 사용됨")
+    public ResponseEntity<ResponseDto<UserProfileResponse>> naverSignUp(
+            @RequestParam(name = "code") String authorizeCode,
+            @RequestParam(name = "state") String state,
+            HttpServletResponse response){
+        User user = authService.naverOAuthLogin(authorizeCode, state);
+        UUID id = user.getId();
+        TokenResponseCookies cookies = tokenService.issueToken(id.toString());
+        response.addHeader("set-cookie", cookies.getAccessToken().toString());
+        UserProfileResponse userProfileResponse = userProfileService.getProfileResponse(user);
+        return new ResponseEntity<>(ResponseDto.res(true, "Naver 로그인 성공", userProfileResponse), HttpStatus.OK);
     }
 
 }
