@@ -18,7 +18,7 @@ public class AuthenticationConfig implements WebMvcConfigurer {
     private final AuthenticatedUserArgumentResolver authenticatedUserArgumentResolver;
 
     private static final String[] EXCLUDE_PATH_PATTERNS = {
-            "/auth/sign-up", "/auth/login", "/users/ranking",
+            "/auth/sign-up", "/auth/login", "/auth/redirect/naver", "/users/ranking",
             "/problems/categories", "/problems/collections",
             "/solutions",
             "/swagger-ui/**", "/v3/api-docs/**"

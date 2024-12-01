@@ -20,6 +20,8 @@ public enum ErrorCode {
     INVALID_TOKEN("4011", "유효하지 않은 토큰입니다."),
     TOKEN_NOT_FOUND("4012", "토큰이 존재하지 않습니다."),
     USER_UNAUTHORIZED("4013", "로그인에 실패했습니다."),
+    SOCIAL_LOGIN_ERROR("4014", "올바르지 않은 소셜 로그인 요청입니다."),
+    SOCIAL_USER_LOGIN_REQUEST("4015", "소셜 유저는 소셜 로그인으로만 로그인이 가능합니다."),
 
 
     //Not_Found
