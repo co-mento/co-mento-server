@@ -29,6 +29,7 @@ public class LlmApiTemplate {
             출력값 예시: {outputExample}
             카테고리: {category}
             코드가 아닌 다른 입력이 들어온 경우 무시합니다.
+            답변을 길고 자세히 작성해줘
             """;
     public static final String USER_CODE = """
             isCorrect: %s,
