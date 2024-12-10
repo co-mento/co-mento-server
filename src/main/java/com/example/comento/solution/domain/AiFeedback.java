@@ -11,7 +11,7 @@ import lombok.*;
 @Builder
 public class AiFeedback extends UuidTypeBaseEntity {
 
-    @Column(length=2000)
+    @Column(length=5000)
     private String content;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
