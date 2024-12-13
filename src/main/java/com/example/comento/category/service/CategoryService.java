@@ -54,4 +54,11 @@ public class CategoryService {
         return categoryRepository.findCategoryByName(name).orElseThrow(()->
                 new NotFoundException(ErrorCode.CATEGORY_NOT_FOUND));
     }
+
+    public boolean isExistCategory(List<String> names){
+        if(names.stream().anyMatch(name -> !categoryRepository.existsByName(name))){
+            return false;
+        }
+        return true;
+    }
 }

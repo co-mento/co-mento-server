@@ -72,6 +72,11 @@ public class ProblemService {
                 new NotFoundException(ErrorCode.PROBLEM_NOT_FOUND));
     }
 
+    /**
+     * admin 기능으로 문제 등록을 편하게 하기 위해서 만든 메서드임.
+     * @ExistCategories로 카테고리 인증을 먼저 진행되므로 중간에 문제 등록 성공 이후 실패하는 케이스를 만들지 않도록 함.
+     * @param problemRegisterRequest 문제 등록 시 필요한 request 를 받아오는 dto.
+     */
     @Transactional
     public void createProblem(ProblemRegisterRequest problemRegisterRequest) {
         Problem problem = registerProblem(problemRegisterRequest);
