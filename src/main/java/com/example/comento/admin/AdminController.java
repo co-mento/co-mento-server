@@ -1,5 +1,6 @@
 package com.example.comento.admin;
 
+import com.example.comento.admin.annotation.ExistCategories;
 import com.example.comento.global.dto.ResponseDto;
 import com.example.comento.problem.damain.Problem;
 import com.example.comento.problem.dto.request.ProblemRegisterRequest;
@@ -21,7 +22,7 @@ public class AdminController {
 
     @PostMapping("/problems")
     @Operation(summary = "문제 등록 api")
-    public ResponseEntity<ResponseDto<Void>> createProblem(@RequestBody ProblemRegisterRequest problemRegisterRequest) {
+    public ResponseEntity<ResponseDto<Void>> createProblem(@RequestBody @ExistCategories  ProblemRegisterRequest problemRegisterRequest) {
         problemService.createProblem(problemRegisterRequest);
         return new ResponseEntity<>(ResponseDto.res(true, "문제 작성 성공"), HttpStatus.CREATED);
     }

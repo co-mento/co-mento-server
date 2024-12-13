@@ -4,6 +4,7 @@ import com.example.comento.global.exception.UnauthorizedException;
 import com.example.comento.global.exception.errorcode.ErrorCode;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 
 import java.time.Duration;
@@ -18,6 +19,30 @@ public class CookieUtil {
                 .httpOnly(true)
                 .sameSite("None")
                 .secure(true)
+                .build();
+    }
+
+    public static ResponseCookie createTokenCookie(
+            String tokenName, String tokenValue, Duration maxAge, String domain){
+        return ResponseCookie.from(tokenName, tokenValue)
+                .maxAge(maxAge)
+                .path("/")
+                .httpOnly(true)
+                .sameSite("None")
+                .secure(true)
+                .domain(domain)
+                .build();
+    }
+
+    public static ResponseCookie createCookie(
+            String tokenName, String tokenValue, Duration maxAge, String domain, boolean httpOnly){
+        return ResponseCookie.from(tokenName, tokenValue)
+                .maxAge(maxAge)
+                .path("/")
+                .httpOnly(httpOnly)
+                .sameSite("None")
+                .secure(true)
+                .domain(domain)
                 .build();
     }
 

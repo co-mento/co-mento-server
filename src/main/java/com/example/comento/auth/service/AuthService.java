@@ -81,8 +81,6 @@ public class AuthService {
     public User naverOAuthLogin(String authorizeCode, String state){
 
         NaverOAuthTokenResponse naverOAuthTokenResponse = getNaverAccessToken(authorizeCode, state);
-        log.info(naverOAuthTokenResponse.toString());
-        log.info(naverOAuthTokenResponse.getAccessToken());
         NaverUserProfile naverUserProfile = getNaverUserProfile(naverOAuthTokenResponse.getAccessToken());
         NaverUserResponse userResponse = naverUserProfile.getResponse();
 
